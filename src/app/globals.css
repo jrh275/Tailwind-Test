@@ -1,26 +1,83 @@
 @import "tailwindcss";
 
+/* ---------- CSS Variables for Theme Colors ---------- */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Brand */
+  --color-brand-royal: #035EDE;
+  --color-brand-royal-hover: #09479E;
+
+  /* Contextual UI */
+  --color-spruce: #1BB169;
+  --color-cardinal: #D2314E;
+  --color-cardinal-hover: #B9344C;
+  --color-pumpkin: #F7A911;
+
+  /* Base UI */
+  --color-midnight: #1C2026;
+  --color-sea: #172537;
+  --color-foggy: #717985;
+  --color-rainy: #AAB0B8;
+  --color-cloudy: #DFE0E5;
+  --color-mist: #EBEEF0;
+  --color-faint: #F7F9FC;
+  --color-white: #FFFFFF;
+
+  /* Typography */
+  --color-typography-midnight: #15181D;
+  --color-typography-foggy: #788189;
+  --color-typography-rainy: #AAB0B8;
+  --color-typography-white: #FFFFFF;
+
+  /* Fonts */
+  --font-sans: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  --font-mono: 'Geist Mono', monospace;
+
+  /* Light theme defaults */
+  --background: var(--color-white);
+  --foreground: var(--color-typography-midnight);
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+
+  /* Map CSS variables to Tailwind colors */
+  --color-brand-royal: var(--color-brand-royal);
+  --color-brand-royal-hover: var(--color-brand-royal-hover);
+
+  --color-contextual-spruce: var(--color-spruce);
+  --color-contextual-cardinal: var(--color-cardinal);
+  --color-contextual-cardinal-hover: var(--color-cardinal-hover);
+  --color-contextual-pumpkin: var(--color-pumpkin);
+
+  --color-base-midnight: var(--color-midnight);
+  --color-base-sea: var(--color-sea);
+  --color-base-foggy: var(--color-foggy);
+  --color-base-rainy: var(--color-rainy);
+  --color-base-cloudy: var(--color-cloudy);
+  --color-base-mist: var(--color-mist);
+  --color-base-faint: var(--color-faint);
+  --color-base-white: var(--color-white);
+
+  --color-typography-midnight: var(--color-typography-midnight);
+  --color-typography-foggy: var(--color-typography-foggy);
+  --color-typography-rainy: var(--color-typography-rainy);
+  --color-typography-white: var(--color-typography-white);
+
+  --font-sans: var(--font-sans);
+  --font-mono: var(--font-mono);
 }
 
+/* Dark mode */
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --background: #0A0A0A;
+    --foreground: var(--color-typography-white);
   }
 }
 
 body {
-  background: var(--background);
+  background-color: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans);
 }

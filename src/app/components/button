@@ -1,0 +1,73 @@
+import React from "react";
+import { cn } from "@/lib/utils"; // optional helper to merge classes
+
+interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  variant?: "primary" | "secondary" | "danger" | "filter";
+  size?: "sm" | "md" | "lg";
+  isLoading?: boolean;
+}
+
+export function Button({
+  variant = "primary",
+  size = "md",
+  isLoading,
+  className,
+  children,
+  ...props
+}: ButtonProps) {
+  return (
+    <button
+      className={cn(
+        "relative inline-flex items-center justify-center rounded-lg font-sans font-medium transition-colors focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed",
+        {
+          // Sizes
+          "px-3 py-2 text-12-16 tracking-caps": size === "sm",
+          "px-4 py-2 text-14-20": size === "md",
+          "px-5 py-3 text-14-20": size === "lg",
+
+          // Variants
+          "bg-brand-royal text-typography-white hover:bg-brand-royal-hover disabled:bg-base-cloudy disabled:text-base-white":
+            variant === "primary",
+
+          "bg-base-white text-base-sea border border-base-cloudy hover:border-base-midnight disabled:text-base-cloudy":
+            variant === "secondary",
+
+          "bg-contextual-cardinal text-typography-white border border-contextual-cardinal hover:bg-contextual-cardinal-hover hover:border-contextual-cardinal-hover disabled:bg-base-cloudy disabled:border-base-cloudy":
+            variant === "danger",
+
+          "bg-base-white text-typography-midnight border border-base-cloudy hover:bg-base-faint disabled:text-typography-rainy disabled:border-base-faint":
+            variant === "filter",
+        },
+        className
+      )}
+      {...props}
+    >
+      {isLoading && (
+        <span className="absolute inset-0 flex items-center justify-center">
+          {/* Replace with spinner if you have one */}
+          <svg
+            className="animate-spin h-4 w-4 text-current"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+          >
+            <circle
+              className="opacity-25"
+              cx="12"
+              cy="12"
+              r="10"
+              stroke="currentColor"
+              strokeWidth="4"
+            ></circle>
+            <path
+              className="opacity-75"
+              fill="currentColor"
+              d="M4 12a8 8 0 018-8v4l3-3-3-3v4a8 8 0 100 16v-4l-3 3 3 3v-4a8 8 0 01-8-8z"
+            ></path>
+          </svg>
+        </span>
+      )}
+      <span className={isLoading ? "opacity-0" : ""}>{children}</span>
+    </button>
+  );
+}
