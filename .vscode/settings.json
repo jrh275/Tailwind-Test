@@ -1,0 +1,30 @@
+{
+  // Format with Prettier
+  "editor.formatOnSave": true,
+  "[javascript][javascriptreact][typescript][typescriptreact][json]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "prettier.enable": true,
+
+  // Helpful save actions
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit",
+    "source.organizeImports": "explicit"
+  },
+
+  // Tailwind CSS IntelliSense
+  "tailwindCSS.emmetCompletions": true,
+  "editor.quickSuggestions": { "strings": true },     // className autocompletion
+  "tailwindCSS.includeLanguages": {
+    "typescript": "javascript",
+    "typescriptreact": "javascript"
+  },
+
+  // Silence warnings for Tailwind v4 directives like @theme inline
+  "css.lint.unknownAtRules": "ignore",
+
+  // Nice-to-haves
+  "files.eol": "\n",
+  "editor.tabSize": 2,
+  "editor.wordWrap": "on"
+}
