@@ -345,91 +345,76 @@ export default function InboxPage() {
           {filteredThreads.map((thread) => (
             <li key={thread.id} className="group">
               <div
-                className={`grid grid-cols-[auto,auto,1fr,auto] items-start gap-3 px-4 py-2.5 hover:bg-base-faint ${
+                className={`space-y-2 px-4 py-2.5 hover:bg-base-faint ${
                   thread.unread ? "bg-[rgba(3,94,222,0.04)]" : ""
                 } ${selectedThreads.has(thread.id) ? "bg-brand-royal/5" : ""}`}
               >
-                {/* Checkbox */}
-                <button
-                  onClick={() => toggleThreadSelection(thread.id)}
-                  className="mt-1 flex h-5 w-5 items-center justify-center rounded border border-base-cloudy bg-base-white hover:bg-base-faint"
-                >
-                  {selectedThreads.has(thread.id) && (
-                    <CheckIcon className="h-3 w-3 text-brand-royal" />
-                  )}
-                </button>
-
-                {/* Avatar */}
-                <div className="mt-1 flex h-8 w-8 items-center justify-center rounded-full bg-base-faint text-xs font-medium text-typography-midnight">
-                  {initials(thread.from)}
-                </div>
-
-                {/* Content */}
-                <div className="min-w-0 space-y-1 pt-0.5">
-                  {/* Header row */}
-                  <div className="flex items-center gap-2">
-                    <span
-                      className={`truncate text-sm ${
-                        thread.unread ? "font-semibold" : "font-medium"
-                      } text-typography-midnight`}
+                {/* Top row: checkbox + name/badges + actions */}
+                <div className="flex items-center justify-between gap-3">
+                  <div className="flex items-center gap-3">
+                    {/* Checkbox */}
+                    <button
+                      onClick={() => toggleThreadSelection(thread.id)}
+                      className="flex h-5 w-5 items-center justify-center rounded border border-base-cloudy bg-base-white hover:bg-base-faint"
                     >
-                      {thread.from}
-                    </span>
+                      {selectedThreads.has(thread.id) && (
+                        <CheckIcon className="h-3 w-3 text-brand-royal" />
+                      )}
+                    </button>
 
-                    {thread.org && (
-                      <span className="shrink-0 rounded border border-base-cloudy bg-base-white px-1.5 py-0.5 text-[10px] text-base-sea">
-                        {thread.org}
-                      </span>
-                    )}
-
-                    <span
-                      className={`shrink-0 rounded px-1.5 py-0.5 text-[10px] ${getChannelStyle(
-                        thread.channel
-                      )}`}
-                    >
-                      {thread.channel}
-                    </span>
-
-                    {thread.priority && (
+                    {/* Name and badges */}
+                    <div className="flex items-center gap-2">
                       <span
-                        className={`shrink-0 rounded px-1.5 py-0.5 text-[10px] ${getPriorityStyle(
-                          thread.priority
+                        className={`text-sm ${
+                          thread.unread ? "font-semibold" : "font-medium"
+                        } text-typography-midnight`}
+                      >
+                        {thread.from}
+                      </span>
+
+                      {thread.org && (
+                        <span className="shrink-0 rounded border border-base-cloudy bg-base-white px-1.5 py-0.5 text-[10px] text-base-sea">
+                          {thread.org}
+                        </span>
+                      )}
+
+                      <span
+                        className={`shrink-0 rounded px-1.5 py-0.5 text-[10px] ${getChannelStyle(
+                          thread.channel
                         )}`}
                       >
-                        {thread.priority}
+                        {thread.channel}
                       </span>
-                    )}
 
-                    {thread.status && (
-                      <span
-                        className={`shrink-0 rounded px-1.5 py-0.5 text-[10px] ${getStatusStyle(
-                          thread.status
-                        )}`}
-                      >
-                        {thread.status}
-                      </span>
-                    )}
+                      {thread.priority && (
+                        <span
+                          className={`shrink-0 rounded px-1.5 py-0.5 text-[10px] ${getPriorityStyle(
+                            thread.priority
+                          )}`}
+                        >
+                          {thread.priority}
+                        </span>
+                      )}
 
-                    {thread.attachments && (
-                      <span className="shrink-0 text-[10px] text-typography-foggy">
-                        📎 {thread.attachments}
-                      </span>
-                    )}
+                      {thread.status && (
+                        <span
+                          className={`shrink-0 rounded px-1.5 py-0.5 text-[10px] ${getStatusStyle(
+                            thread.status
+                          )}`}
+                        >
+                          {thread.status}
+                        </span>
+                      )}
+
+                      {thread.attachments && (
+                        <span className="shrink-0 text-[10px] text-typography-foggy">
+                          📎 {thread.attachments}
+                        </span>
+                      )}
+                    </div>
                   </div>
 
-                  {/* Subject */}
-                  <div className="truncate text-[13px] font-medium text-typography-midnight">
-                    {thread.subject}
-                  </div>
-
-                  {/* Snippet */}
-                  <p className="truncate text-xs text-typography-rainy">
-                    {thread.snippet}
-                  </p>
-                </div>
-
-                {/* Right column */}
-                <div className="mt-1 flex flex-col items-end gap-1.5">
+                  {/* Right actions */}
                   <div className="flex items-center gap-2">
                     <span className="whitespace-nowrap text-xs text-typography-foggy">
                       {thread.date}
@@ -450,9 +435,7 @@ export default function InboxPage() {
                         <StarIcon className="h-4 w-4 text-typography-foggy hover:text-contextual-pumpkin" />
                       )}
                     </button>
-                  </div>
 
-                  <div className="flex items-center gap-2">
                     {thread.unread && (
                       <span className="h-2 w-2 rounded-full bg-brand-royal" />
                     )}
@@ -460,6 +443,27 @@ export default function InboxPage() {
                     <button className="opacity-0 group-hover:opacity-100 transition-opacity">
                       <EllipsisHorizontalIcon className="h-4 w-4 text-typography-foggy hover:text-typography-midnight" />
                     </button>
+                  </div>
+                </div>
+
+                {/* Bottom row: avatar + subject + snippet */}
+                <div className="flex items-start gap-3">
+                  {/* Avatar */}
+                  <div className="flex h-8 w-8 items-center justify-center rounded-full bg-base-faint text-xs font-medium text-typography-midnight">
+                    {initials(thread.from)}
+                  </div>
+
+                  {/* Content */}
+                  <div className="min-w-0 space-y-1">
+                    {/* Subject */}
+                    <div className="truncate text-[13px] font-medium text-typography-midnight">
+                      {thread.subject}
+                    </div>
+
+                    {/* Snippet */}
+                    <p className="truncate text-xs text-typography-rainy">
+                      {thread.snippet}
+                    </p>
                   </div>
                 </div>
               </div>
