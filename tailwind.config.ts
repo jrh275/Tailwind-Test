@@ -7,6 +7,7 @@ const config: Config = {
       fontFamily: {
         sans: ["var(--font-sans)", "ui-sans-serif", "system-ui", "sans-serif"],
         mono: ["var(--font-mono)", "ui-monospace", "monospace"],
+        heading: ["var(--font-heading)", "var(--font-sans)", "sans-serif"],
       },
       colors: {
         // Brand
@@ -40,11 +41,13 @@ const config: Config = {
         foreground: "var(--foreground)",
       },
       fontSize: {
+        // Keep your existing custom sizes
         "12-16": ["12px", { lineHeight: "16px" }],
         "14-20": ["14px", { lineHeight: "20px" }],
       },
       letterSpacing: {
         caps: "0.04em",
+        overline: "1.2px",
       },
     },
   },

@@ -6,7 +6,6 @@ import {
   CheckIcon,
   EllipsisHorizontalIcon,
   FunnelIcon,
-  MagnifyingGlassIcon,
   StarIcon,
   TrashIcon,
 } from "@heroicons/react/24/outline";
@@ -133,24 +132,10 @@ export default function InboxPage() {
   const [selectedThreads, setSelectedThreads] = useState<Set<string>>(
     new Set()
   );
-  const [searchQuery, setSearchQuery] = useState("");
   const [activeFilter, setActiveFilter] = useState("all");
   const [showFilters, setShowFilters] = useState(false);
 
   const filteredThreads = THREADS.filter((thread) => {
-    // Search filter
-    if (searchQuery) {
-      const query = searchQuery.toLowerCase();
-      if (
-        !thread.from.toLowerCase().includes(query) &&
-        !thread.subject.toLowerCase().includes(query) &&
-        !thread.snippet.toLowerCase().includes(query) &&
-        !thread.org?.toLowerCase().includes(query)
-      ) {
-        return false;
-      }
-    }
-
     // Active filter
     switch (activeFilter) {
       case "unread":
@@ -234,10 +219,8 @@ export default function InboxPage() {
       {/* Page header */}
       <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-[28px] font-semibold tracking-tight text-typography-midnight">
-            📥 Inbox
-          </h1>
-          <p className="mt-1 text-sm text-typography-foggy">
+          <h2>Inbox</h2>
+          <p className="small text-foggy mt-1">
             {filteredThreads.length} of {THREADS.length} conversations
             {selectedThreads.size > 0 && (
               <span className="ml-2 text-brand-royal">
@@ -247,21 +230,8 @@ export default function InboxPage() {
           </p>
         </div>
 
-        {/* Search and filters */}
+        {/* Filters */}
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-          {/* Search */}
-          <div className="relative">
-            <div className="flex items-center gap-2 rounded-lg border border-base-cloudy bg-base-white px-3 py-2.5 focus-within:border-brand-royal focus-within:ring-1 focus-within:ring-brand-royal">
-              <MagnifyingGlassIcon className="h-4 w-4 text-typography-foggy" />
-              <input
-                className="w-64 bg-transparent text-sm text-typography-midnight placeholder-typography-rainy focus:outline-none"
-                placeholder="Search conversations..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-              />
-            </div>
-          </div>
-
           {/* Filter dropdown */}
           <div className="relative">
             <button
@@ -323,7 +293,7 @@ export default function InboxPage() {
       {/* Threads list */}
       <div className="overflow-hidden rounded-xl border border-base-cloudy bg-base-white">
         {/* Header */}
-        <div className="border-b border-base-mist bg-base-faint px-4 py-2.5">
+        <div className="border-b border-base-mist bg-base-white px-4 py-2.5">
           <div className="flex items-center gap-4">
             <button
               onClick={toggleSelectAll}
@@ -345,8 +315,8 @@ export default function InboxPage() {
           {filteredThreads.map((thread) => (
             <li key={thread.id} className="group">
               <div
-                className={`space-y-2 px-4 py-2.5 hover:bg-base-faint ${
-                  thread.unread ? "bg-[rgba(3,94,222,0.04)]" : ""
+                className={`space-y-2 px-4 py-2.5 hover:bg-base-white ${
+                  thread.unread ? "bg-base-white" : ""
                 } ${selectedThreads.has(thread.id) ? "bg-brand-royal/5" : ""}`}
               >
                 {/* Top row: checkbox + name/badges + actions */}
@@ -478,8 +448,8 @@ export default function InboxPage() {
               No conversations found
             </h3>
             <p className="text-sm text-typography-foggy">
-              {searchQuery || activeFilter !== "all"
-                ? "Try adjusting your search or filters"
+              {activeFilter !== "all"
+                ? "Try adjusting your filters"
                 : "You're all caught up!"}
             </p>
           </div>
