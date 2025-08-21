@@ -1,8 +1,8 @@
 // src/app/fonts/index.ts
-import { EB_Garamond, Inter } from "next/font/google";
+import { Inter, Noto_Serif_Georgian } from "next/font/google";
 
-// Use EB Garamond for headings (serif)
-export const austinNewsDeck = EB_Garamond({
+// Use Lora for headings (serif)
+export const austinNewsDeck = Noto_Serif_Georgian({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"], // Regular, Medium, Semibold, Bold
   variable: "--font-heading",

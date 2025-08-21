@@ -3,13 +3,8 @@
 import DataGrid from "@/app/components/DataGrid";
 
 export default function PropertiesPage() {
-  const handleExport = () => {
-    console.log("Export properties");
-  };
-
-  const handleAdd = () => {
-    console.log("Add new property");
-  };
+  const handleExport = () => console.log("Export properties");
+  const handleAdd = () => console.log("Add new property");
 
   return (
     <div className="p-6 space-y-8">
@@ -23,11 +18,9 @@ export default function PropertiesPage() {
         </p>
       </div>
 
-      {/* Main DataGrid Section */}
-      <div className="bg-white rounded-lg border border-base-cloudy">
+      {/* Borderless container */}
+      <div className="bg-white">
         <DataGrid
-          title="Properties"
-          subtitle="Manage all properties in your portfolio."
           actions={[
             { label: "EXPORT", onClick: handleExport },
             { label: "ADD", onClick: handleAdd, primary: true },

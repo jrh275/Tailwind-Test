@@ -2,17 +2,17 @@
 
 /* ---------- CSS Variables for Theme Colors ---------- */
 :root {
-  /* Brand */
+  /* Brand (Hex) */
   --color-brand-royal: #035EDE;
   --color-brand-royal-hover: #09479E;
 
-  /* Contextual UI */
+  /* Contextual UI (Hex) */
   --color-spruce: #1BB169;
   --color-cardinal: #D2314E;
   --color-cardinal-hover: #B9344C;
   --color-pumpkin: #F7A911;
 
-  /* Base UI */
+  /* Base UI (Hex) */
   --color-midnight: #1C2026;
   --color-sea: #172537;
   --color-foggy: #717985;
@@ -22,220 +22,31 @@
   --color-faint: #F7F9FC;
   --color-white: #FFFFFF;
 
-  /* Typography */
+  /* Typography (Hex) */
   --color-typography-midnight: #15181D;
   --color-typography-foggy: #788189;
-  --color-typography-rainy: #AAB0B8;
+  --color-typography-rainy: #9DA4AF;
+  --color-typography-cloudy: #D3D6DC;
   --color-typography-white: #FFFFFF;
-
-  /* Light theme defaults */
-  --background: var(--color-white);
-  --foreground: var(--color-typography-midnight);
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-
-  /* Map CSS variables to Tailwind colors */
-  --color-brand-royal: var(--color-brand-royal);
-  --color-brand-royal-hover: var(--color-brand-royal-hover);
-
-  --color-contextual-spruce: var(--color-spruce);
-  --color-contextual-cardinal: var(--color-cardinal);
-  --color-contextual-cardinal-hover: var(--color-cardinal-hover);
-  --color-contextual-pumpkin: var(--color-pumpkin);
-
-  --color-base-midnight: var(--color-midnight);
-  --color-base-sea: var(--color-sea);
-  --color-base-foggy: var(--color-foggy);
-  --color-base-rainy: var(--color-rainy);
-  --color-base-cloudy: var(--color-cloudy);
-  --color-base-mist: var(--color-mist);
-  --color-base-faint: var(--color-faint);
-  --color-base-white: var(--color-white);
-
-  --color-typography-midnight: var(--color-typography-midnight);
-  --color-typography-foggy: var(--color-typography-foggy);
-  --color-typography-rainy: var(--color-typography-rainy);
-  --color-typography-white: var(--color-typography-white);
+/* ---------- Option A: Borderless Tabs Styling ---------- */
+[role="tablist"] {
+  border-bottom: none !important; /* remove all underline borders */
 }
 
-/* Dark mode */
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0A0A0A;
-    --foreground: var(--color-typography-white);
-  }
+[role="tab"] {
+  border-bottom: 2px solid transparent; /* invisible by default */
 }
 
-body {
-  background-color: var(--background);
-  color: var(--foreground);
-  font-family: var(--font-sans);
+[role="tab"][aria-selected="true"] {
+  border-color: var(--color-brand-royal); /* only the active tab shows underline */
+  color: var(--color-brand-royal);
+  font-weight: 600;
 }
 
-/* ---------- DEFAULT HTML ELEMENT STYLES ---------- */
-
-/* Headings - Default Poppins Bold */
-h1 {
-  font-family: var(--font-heading);
-  font-size: 40px;
-  line-height: 44px;
-  font-weight: 700;
-  color: var(--color-typography-midnight);
-}
-
-h2 {
-  font-family: var(--font-heading);
-  font-size: 32px;
-  line-height: 36px;
-  font-weight: 700;
-  color: var(--color-typography-midnight);
-}
-
-h3 {
-  font-family: var(--font-heading);
-  font-size: 26px;
-  line-height: 30px;
-  font-weight: 700;
-  color: var(--color-typography-midnight);
-}
-
-h4 {
-  font-family: var(--font-heading);
-  font-size: 22px;
-  line-height: 26px;
-  font-weight: 700;
-  color: var(--color-typography-midnight);
-}
-
-h5 {
-  font-family: var(--font-heading);
-  font-size: 18px;
-  line-height: 22px;
-  font-weight: 700;
-  color: var(--color-typography-midnight);
-}
-
-h6 {
-  font-family: var(--font-heading);
-  font-size: 16px;
-  line-height: 20px;
-  font-weight: 700;
-  color: var(--color-typography-midnight);
-}
-
-/* Paragraphs - Default Inter Regular */
-p {
-  font-family: var(--font-sans);
-  font-size: 16px;
-  line-height: 20px;
-  font-weight: 400;
-  color: var(--color-typography-midnight);
-}
-
-/* Default text elements */
-span, div {
-  font-family: var(--font-sans);
-  color: var(--color-typography-midnight);
-}
-
-/* ---------- MODIFIER CLASSES ---------- */
-@layer utilities {
-  /* Weight modifiers */
-  .regular { font-weight: 400 !important; }
-  .medium { font-weight: 500 !important; }
-  .semibold { font-weight: 600 !important; }
-  .bold { font-weight: 700 !important; }
-  
-  /* Size modifiers */
-  .xs {
-    font-size: 12px !important;
-    line-height: 16px !important;
-  }
-  
-  .small {
-    font-size: 14px !important;
-    line-height: 18px !important;
-  }
-  
-  .base {
-    font-size: 16px !important;
-    line-height: 20px !important;
-  }
-  
-  .large {
-    font-size: 18px !important;
-    line-height: 22px !important;
-  }
-  
-  .xl {
-    font-size: 20px !important;
-    line-height: 24px !important;
-  }
-
-  /* Prose classes (better for reading) */
-  .prose-sm {
-    font-size: 14px !important;
-    line-height: 20px !important;
-    font-family: var(--font-sans) !important;
-  }
-  
-  .prose-base {
-    font-size: 16px !important;
-    line-height: 24px !important;
-    font-family: var(--font-sans) !important;
-  }
-  
-  .prose-lg {
-    font-size: 18px !important;
-    line-height: 28px !important;
-    font-family: var(--font-sans) !important;
-  }
-
-  /* Component classes */
-  .label-sm {
-    font-family: var(--font-sans) !important;
-    font-size: 12px !important;
-    line-height: 16px !important;
-    font-weight: 500 !important;
-    color: var(--color-typography-midnight) !important;
-  }
-  
-  .label-md {
-    font-family: var(--font-sans) !important;
-    font-size: 14px !important;
-    line-height: 18px !important;
-    font-weight: 500 !important;
-    color: var(--color-typography-midnight) !important;
-  }
-  
-  .label-lg {
-    font-family: var(--font-heading) !important;
-    font-size: 14px !important;
-    line-height: 18px !important;
-    font-weight: 700 !important;
-    color: var(--color-typography-midnight) !important;
-  }
-  
-  .overline {
-    font-family: var(--font-sans) !important;
-    font-size: 12px !important;
-    line-height: 16px !important;
-    font-weight: 400 !important;
-    letter-spacing: 1.2px !important;
-    text-transform: uppercase !important;
-    color: var(--color-typography-midnight) !important;
-  }
-
-  /* Color classes */
-  .text-midnight { color: var(--color-typography-midnight) !important; }
-  .text-foggy { color: var(--color-typography-foggy) !important; }
-  .text-rainy { color: var(--color-typography-rainy) !important; }
-  .text-white { color: var(--color-typography-white) !important; }
-  .text-royal { color: var(--color-brand-royal) !important; }
-  .text-cardinal { color: var(--color-contextual-cardinal) !important; }
-  .text-pumpkin { color: var(--color-contextual-pumpkin) !important; }
-  .text-spruce { color: var(--color-contextual-spruce) !important; }
+/* Accessibility: focus visible on keyboard nav */
+[role="tab"]:focus-visible {
+  outline: 2px solid var(--color-brand-royal);
+  outline-offset: 2px;
 }
