@@ -23,7 +23,8 @@ export default function DateInput({
         placeholder={placeholder}
         value={value}
         onChange={onChange}
-        className="block w-full rounded-md bg-white py-2 pr-10 pl-3 text-sm text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-brand-royal dark:bg-white/5 dark:text-white dark:outline-white/10 dark:placeholder:text-gray-400"
+        className="block w-full rounded-md bg-white py-2 pr-10 pl-3 text-sm text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-brand-royal dark:bg-white/5 dark:text-white dark:outline-white/10 dark:placeholder:text-gray-400
+          [appearance:textfield] [&::-webkit-calendar-picker-indicator]:opacity-0 [&::-webkit-calendar-picker-indicator]:absolute"
       />
       <CalendarDaysIcon
         aria-hidden="true"

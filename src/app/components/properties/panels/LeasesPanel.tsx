@@ -61,13 +61,13 @@ export default function LeasesPanel() {
       monthlyRent: "",
       description: "",
     };
-    setRentPeriods([...rentPeriods, newPeriod]);
+    setRentPeriods((prev) => [...prev, newPeriod]);
   };
 
   const removeRentPeriod = (id: string) => {
-    if (rentPeriods.length > 1) {
-      setRentPeriods(rentPeriods.filter((period) => period.id !== id));
-    }
+    setRentPeriods((prev) =>
+      prev.length > 1 ? prev.filter((p) => p.id !== id) : prev
+    );
   };
 
   const updateRentPeriod = (
@@ -75,19 +75,17 @@ export default function LeasesPanel() {
     field: keyof RentPeriod,
     value: string
   ) => {
-    setRentPeriods(
-      rentPeriods.map((period) =>
-        period.id === id ? { ...period, [field]: value } : period
-      )
+    setRentPeriods((prev) =>
+      prev.map((p) => (p.id === id ? { ...p, [field]: value } : p))
     );
   };
 
   return (
-    <div className="space-y-8">
-      {/* Lease Dates and Terms */}
+    <div className="space-y-6">
+      {/* --- Lease Dates & Terms (match DetailsPanel line rhythm) --- */}
       <div className="grid grid-cols-1 gap-x-8 sm:grid-cols-2">
-        {/* Line 1: Lease Start Date & Lease End Date */}
-        <div className="px-4 py-6 sm:px-0">
+        {/* Line 1 */}
+        <div className="px-0 py-3">
           <dt className="text-sm/6 font-medium text-gray-900 dark:text-white">
             Lease Start Date
           </dt>
@@ -95,8 +93,7 @@ export default function LeasesPanel() {
             <DateInput id="leaseStartDate" />
           </dd>
         </div>
-
-        <div className="px-4 py-6 sm:px-0">
+        <div className="px-0 py-3">
           <dt className="text-sm/6 font-medium text-gray-900 dark:text-white">
             Lease End Date
           </dt>
@@ -105,8 +102,8 @@ export default function LeasesPanel() {
           </dd>
         </div>
 
-        {/* Line 2: Security Deposit & Rent Commencement Date */}
-        <div className="px-4 py-6 sm:px-0">
+        {/* Line 2 */}
+        <div className="px-0 py-3">
           <dt className="text-sm/6 font-medium text-gray-900 dark:text-white">
             Security Deposit
           </dt>
@@ -118,8 +115,7 @@ export default function LeasesPanel() {
             />
           </dd>
         </div>
-
-        <div className="px-4 py-6 sm:px-0">
+        <div className="px-0 py-3">
           <dt className="text-sm/6 font-medium text-gray-900 dark:text-white">
             Rent Commencement Date
           </dt>
@@ -128,8 +124,8 @@ export default function LeasesPanel() {
           </dd>
         </div>
 
-        {/* Line 3: Lease Type & Select Units */}
-        <div className="px-4 py-6 sm:px-0">
+        {/* Line 3 */}
+        <div className="px-0 py-3">
           <dt className="text-sm/6 font-medium text-gray-900 dark:text-white">
             Lease Type
           </dt>
@@ -141,8 +137,7 @@ export default function LeasesPanel() {
             />
           </dd>
         </div>
-
-        <div className="px-4 py-6 sm:px-0">
+        <div className="px-0 py-3">
           <dt className="text-sm/6 font-medium text-gray-900 dark:text-white">
             Select Units
           </dt>
@@ -151,23 +146,22 @@ export default function LeasesPanel() {
               id="units"
               options={unitOptions}
               placeholder="Select one or more units"
-              multiple={true}
+              multiple
             />
           </dd>
         </div>
       </div>
 
-      {/* Divider */}
-      <div className="border-t border-gray-200 dark:border-gray-700"></div>
+      {/* Divider to match DetailsPanel */}
+      <div className="border-t border-gray-200 dark:border-white/10" />
 
-      {/* TENANT Section */}
+      {/* --- Tenant (same dt/dd pattern) --- */}
       <div>
-        <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-6">
-          TENANT
+        <h3 className="text-sm font-medium text-gray-900 dark:text-white mb-2">
+          Tenant
         </h3>
-
         <div className="grid grid-cols-1 gap-x-8 sm:grid-cols-2">
-          <div className="px-4 py-6 sm:px-0">
+          <div className="px-0 py-3">
             <dt className="text-sm/6 font-medium text-gray-900 dark:text-white">
               Company Name
             </dt>
@@ -178,8 +172,7 @@ export default function LeasesPanel() {
               />
             </dd>
           </div>
-
-          <div className="px-4 py-6 sm:px-0">
+          <div className="px-0 py-3">
             <dt className="text-sm/6 font-medium text-gray-900 dark:text-white">
               Contact Person
             </dt>
@@ -187,8 +180,7 @@ export default function LeasesPanel() {
               <FieldInput id="tenantContact" placeholder="e.g., John Smith" />
             </dd>
           </div>
-
-          <div className="px-4 py-6 sm:px-0">
+          <div className="px-0 py-3">
             <dt className="text-sm/6 font-medium text-gray-900 dark:text-white">
               Email Address
             </dt>
@@ -200,8 +192,7 @@ export default function LeasesPanel() {
               />
             </dd>
           </div>
-
-          <div className="px-4 py-6 sm:px-0">
+          <div className="px-0 py-3">
             <dt className="text-sm/6 font-medium text-gray-900 dark:text-white">
               Phone Number
             </dt>
@@ -217,21 +208,23 @@ export default function LeasesPanel() {
       </div>
 
       {/* Divider */}
-      <div className="border-t border-gray-200 dark:border-gray-700"></div>
+      <div className="border-t border-gray-200 dark:border-white/10" />
 
-      {/* LEASE FILES Section */}
+      {/* --- Lease Files (mirrors Attachments block) --- */}
       <div>
-        <div className="flex items-center justify-between mb-4">
-          <h3 className="text-lg font-medium text-gray-900 dark:text-white">
-            LEASE FILES
+        <div className="flex items-center justify-between">
+          <h3 className="text-sm font-medium text-gray-900 dark:text-white">
+            Lease Files
           </h3>
-          <button className="flex items-center gap-2 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 dark:bg-white/10 dark:text-white dark:ring-white/20 dark:hover:bg-white/20">
-            <PlusIcon className="h-4 w-4" />
-            Upload File
+          <button
+            type="button"
+            className="rounded-full border-1 border-sea p-1 text-sea hover:bg-sea/20 dark:border-sea dark:text-sea dark:hover:bg-sea/30"
+          >
+            <PlusIcon aria-hidden="true" className="size-5" />
           </button>
         </div>
 
-        <ul className="divide-y divide-gray-200 dark:divide-gray-700">
+        <ul className="mt-4 divide-y divide-gray-200 dark:divide-white/10">
           <li className="flex items-center justify-between py-3">
             <div className="flex items-center gap-3">
               <PaperClipIcon className="h-5 w-5 text-gray-400" />
@@ -271,16 +264,15 @@ export default function LeasesPanel() {
       </div>
 
       {/* Divider */}
-      <div className="border-t border-gray-200 dark:border-gray-700"></div>
+      <div className="border-t border-gray-200 dark:border-white/10" />
 
-      {/* LEASE RENT Section */}
+      {/* --- Lease Rent --- */}
       <div>
-        <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-6">
-          LEASE RENT
+        <h3 className="text-sm font-medium text-gray-900 dark:text-white mb-2">
+          Lease Rent
         </h3>
-
         <div className="grid grid-cols-1 gap-x-8 sm:grid-cols-2">
-          <div className="px-4 py-6 sm:px-0">
+          <div className="px-0 py-3">
             <dt className="text-sm/6 font-medium text-gray-900 dark:text-white">
               Rent Structure
             </dt>
@@ -292,8 +284,7 @@ export default function LeasesPanel() {
               />
             </dd>
           </div>
-
-          <div className="px-4 py-6 sm:px-0">
+          <div className="px-0 py-3">
             <dt className="text-sm/6 font-medium text-gray-900 dark:text-white">
               Base Monthly Rent
             </dt>
@@ -309,13 +300,13 @@ export default function LeasesPanel() {
       </div>
 
       {/* Divider */}
-      <div className="border-t border-gray-200 dark:border-gray-700"></div>
+      <div className="border-t border-gray-200 dark:border-white/10" />
 
-      {/* RENT SCHEDULE Section */}
+      {/* --- Rent Schedule (compact card style aligned with DetailsPanel density) --- */}
       <div>
-        <div className="flex items-center justify-between mb-6">
-          <h3 className="text-lg font-medium text-gray-900 dark:text-white">
-            RENT SCHEDULE
+        <div className="flex items-center justify-between">
+          <h3 className="text-sm font-medium text-gray-900 dark:text-white">
+            Rent Schedule
           </h3>
           <button
             onClick={addRentPeriod}
@@ -326,20 +317,21 @@ export default function LeasesPanel() {
           </button>
         </div>
 
-        <div className="space-y-6">
-          {rentPeriods.map((period, index) => (
+        <div className="mt-4 space-y-4">
+          {rentPeriods.map((period, idx) => (
             <div
               key={period.id}
-              className="border border-gray-200 dark:border-gray-700 rounded-lg p-4"
+              className="rounded-lg border border-gray-200 p-4 dark:border-white/10"
             >
-              <div className="flex items-center justify-between mb-4">
+              <div className="mb-3 flex items-center justify-between">
                 <h4 className="text-sm font-medium text-gray-900 dark:text-white">
-                  Period {index + 1}
+                  Period {idx + 1}
                 </h4>
                 {rentPeriods.length > 1 && (
                   <button
                     onClick={() => removeRentPeriod(period.id)}
-                    className="text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-300"
+                    className="text-red-600 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300"
+                    aria-label={`Remove Period ${idx + 1}`}
                   >
                     <TrashIcon className="h-4 w-4" />
                   </button>
@@ -348,7 +340,7 @@ export default function LeasesPanel() {
 
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                  <label className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">
                     Start Date
                   </label>
                   <DateInput
@@ -361,7 +353,7 @@ export default function LeasesPanel() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                  <label className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">
                     End Date
                   </label>
                   <DateInput
@@ -374,7 +366,7 @@ export default function LeasesPanel() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                  <label className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">
                     Monthly Rent
                   </label>
                   <FieldInput
@@ -389,7 +381,7 @@ export default function LeasesPanel() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                  <label className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">
                     Description
                   </label>
                   <FieldInput
@@ -407,13 +399,19 @@ export default function LeasesPanel() {
         </div>
       </div>
 
-      {/* Action Buttons */}
-      <div className="flex justify-end gap-3 pt-6">
-        <button className="rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 dark:bg-white/10 dark:text-white dark:ring-white/20 dark:hover:bg-white/20">
+      {/* Actions (mirror DetailsPanel buttons: outline Cancel + royal Save) */}
+      <div className="mt-8 flex justify-end gap-3">
+        <button
+          type="button"
+          className="rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 dark:bg-white/10 dark:text-white dark:ring-white/20 dark:hover:bg-white/20"
+        >
           Cancel
         </button>
-        <button className="rounded-md bg-brand-royal px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-royal">
-          Save Lease
+        <button
+          type="button"
+          className="rounded-md bg-royal/10 px-3 py-2 text-sm font-semibold text-royal shadow-xs hover:bg-royal/20 dark:bg-royal/20 dark:text-royal dark:shadow-none dark:hover:bg-royal/30"
+        >
+          Save Changes
         </button>
       </div>
     </div>

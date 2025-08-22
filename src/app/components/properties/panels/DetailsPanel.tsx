@@ -134,7 +134,7 @@ export default function DetailsPanel() {
           </h3>
           <button
             type="button"
-            className="rounded-full border border-sea p-1 text-sea hover:bg-sea/20 dark:border-sea dark:text-sea dark:hover:bg-sea/30"
+            className="rounded-full border-1 border-sea p-1 text-sea hover:bg-sea/20 dark:border-sea dark:text-sea dark:hover:bg-sea/30"
           >
             <PlusIcon aria-hidden="true" className="size-5" />
           </button>

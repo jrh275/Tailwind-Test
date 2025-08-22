@@ -16,7 +16,6 @@ import SettingsPanel from "../../components/properties/panels/SettingsPanel";
 import UnitsPanel from "../../components/properties/panels/UnitsPanel";
 
 type TabKey = "details" | "leases" | "units" | "issues" | "settings" | "files";
-
 const DEFAULT_TAB: TabKey = "details";
 
 const pages = [
@@ -38,10 +37,18 @@ const TABS: { key: TabKey; name: string }[] = [
   { key: "files", name: "Files" },
 ];
 
+// Stats (example values)
+const stats = [
+  { name: "Total Square Feet", value: "20,000" },
+  { name: "Rentable Square Feet", value: "18,500" },
+  { name: "Current Rent", value: "$25,000" },
+  { name: "Next Month's Rent", value: "$27,000" },
+  { name: "Occupancy Rate", value: "92%" },
+];
+
 function classNames(...classes: Array<string | false | null | undefined>) {
   return classes.filter(Boolean).join(" ");
 }
-
 function isTabKey(v: string | null): v is TabKey {
   return !!v && TABS.some((t) => t.key === v);
 }
@@ -83,44 +90,61 @@ export default function PropertiesDetailsPage() {
 
   return (
     <div className="bg-base-white dark:bg-gray-800/50 -mt-12">
-      {/* Breadcrumb */}
-      <nav aria-label="Breadcrumb" className="px-4 sm:px-6 lg:px-8 py-4">
-        <ol role="list" className="flex items-center space-x-4">
-          <li>
-            <div>
-              <Link
-                href="/"
-                className="text-gray-400 hover:text-gray-500 dark:text-gray-500 dark:hover:text-gray-300"
-              >
-                <HomeIcon aria-hidden="true" className="size-5 shrink-0" />
-                <span className="sr-only">Home</span>
-              </Link>
-            </div>
-          </li>
-          {pages.map((page) => (
-            <li key={page.name}>
-              <div className="flex items-center">
-                <ChevronRightIcon
-                  aria-hidden="true"
-                  className="size-5 shrink-0 text-gray-400 dark:text-gray-500"
-                />
-                <Link
-                  href={page.href}
-                  aria-current={page.current ? "page" : undefined}
-                  className={classNames(
-                    "ml-4 text-sm font-medium",
-                    page.current
-                      ? "text-gray-900 dark:text-gray-100"
-                      : "text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
-                  )}
-                >
-                  {page.name}
-                </Link>
+      {/* Breadcrumb + inline right-aligned stats */}
+      <div className="px-4 sm:px-6 lg:px-8 py-3">
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
+          {/* Breadcrumb (left) */}
+          <nav aria-label="Breadcrumb">
+            <ol role="list" className="flex items-center space-x-4">
+              <li>
+                <div>
+                  <Link
+                    href="/"
+                    className="text-gray-400 hover:text-gray-500 dark:text-gray-500 dark:hover:text-gray-300"
+                  >
+                    <HomeIcon aria-hidden="true" className="size-5 shrink-0" />
+                    <span className="sr-only">Home</span>
+                  </Link>
+                </div>
+              </li>
+              {pages.map((page) => (
+                <li key={page.name}>
+                  <div className="flex items-center">
+                    <ChevronRightIcon
+                      aria-hidden="true"
+                      className="size-5 shrink-0 text-gray-400 dark:text-gray-500"
+                    />
+                    <Link
+                      href={page.href}
+                      aria-current={page.current ? "page" : undefined}
+                      className={classNames(
+                        "ml-4 text-sm font-medium",
+                        page.current
+                          ? "text-gray-900 dark:text-gray-100"
+                          : "text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+                      )}
+                    >
+                      {page.name}
+                    </Link>
+                  </div>
+                </li>
+              ))}
+            </ol>
+          </nav>
+
+          {/* Stats (right, left-justified) */}
+          <dl className="sm:ml-6 flex items-center gap-x-6 gap-y-1 overflow-x-auto whitespace-nowrap py-1 text-xs sm:text-sm">
+            {stats.map((s) => (
+              <div key={s.name} className="flex flex-col text-left">
+                <dt className="text-gray-500 dark:text-gray-400">{s.name}</dt>
+                <dd className="font-semibold text-gray-900 dark:text-white">
+                  {s.value}
+                </dd>
               </div>
-            </li>
-          ))}
-        </ol>
-      </nav>
+            ))}
+          </dl>
+        </div>
+      </div>
 
       {/* Tabs */}
       <div className="px-4 sm:px-6 lg:px-8">

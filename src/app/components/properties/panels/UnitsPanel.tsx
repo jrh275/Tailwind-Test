@@ -185,82 +185,8 @@ export default function UnitsPanel() {
     }
   };
 
-  const totalUnits = units.length;
-  const occupiedUnits = units.filter((u) => u.status === "Occupied").length;
-  const occupancyRate = Math.round((occupiedUnits / totalUnits) * 100);
-  const totalRevenue = units
-    .filter((u) => u.status === "Occupied")
-    .reduce((sum, u) => sum + u.monthlyRent, 0);
-
   return (
     <div className="space-y-6">
-      {/* Overview Cards */}
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <div className="bg-white dark:bg-gray-800 p-6 rounded-lg border border-gray-200 dark:border-gray-700">
-          <div className="flex items-center">
-            <div className="flex-shrink-0">
-              <HomeIcon className="h-8 w-8 text-blue-600" />
-            </div>
-            <div className="ml-4">
-              <h3 className="text-lg font-medium text-gray-900 dark:text-white">
-                Total Units
-              </h3>
-              <p className="text-2xl font-bold text-blue-600">{totalUnits}</p>
-            </div>
-          </div>
-        </div>
-
-        <div className="bg-white dark:bg-gray-800 p-6 rounded-lg border border-gray-200 dark:border-gray-700">
-          <div className="flex items-center">
-            <div className="flex-shrink-0">
-              <UserIcon className="h-8 w-8 text-green-600" />
-            </div>
-            <div className="ml-4">
-              <h3 className="text-lg font-medium text-gray-900 dark:text-white">
-                Occupied
-              </h3>
-              <p className="text-2xl font-bold text-green-600">
-                {occupiedUnits}
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <div className="bg-white dark:bg-gray-800 p-6 rounded-lg border border-gray-200 dark:border-gray-700">
-          <div className="flex items-center">
-            <div className="flex-shrink-0">
-              <CheckCircleIcon className="h-8 w-8 text-purple-600" />
-            </div>
-            <div className="ml-4">
-              <h3 className="text-lg font-medium text-gray-900 dark:text-white">
-                Occupancy
-              </h3>
-              <p className="text-2xl font-bold text-purple-600">
-                {occupancyRate}%
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <div className="bg-white dark:bg-gray-800 p-6 rounded-lg border border-gray-200 dark:border-gray-700">
-          <div className="flex items-center">
-            <div className="flex-shrink-0">
-              <div className="h-8 w-8 text-emerald-600 font-bold text-xl">
-                $
-              </div>
-            </div>
-            <div className="ml-4">
-              <h3 className="text-lg font-medium text-gray-900 dark:text-white">
-                Revenue
-              </h3>
-              <p className="text-2xl font-bold text-emerald-600">
-                ${totalRevenue.toLocaleString()}
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-
       {/* Search and Filters */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex-1 relative">
@@ -380,22 +306,6 @@ export default function UnitsPanel() {
                 </div>
               )}
 
-              <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-600">
-                <h4 className="font-medium text-gray-900 dark:text-white mb-2">
-                  Amenities
-                </h4>
-                <div className="flex flex-wrap gap-1">
-                  {unit.amenities.map((amenity, index) => (
-                    <span
-                      key={index}
-                      className="inline-block px-2 py-1 text-xs bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded"
-                    >
-                      {amenity}
-                    </span>
-                  ))}
-                </div>
-              </div>
-
               <div className="mt-4 flex justify-end">
                 <button className="text-blue-600 hover:text-blue-800 text-sm font-medium">
                   Edit Unit
@@ -443,18 +353,6 @@ export default function UnitsPanel() {
                         </p>
                       </div>
                     )}
-                  </div>
-                  <div className="mt-2">
-                    <div className="flex flex-wrap gap-1">
-                      {unit.amenities.map((amenity, index) => (
-                        <span
-                          key={index}
-                          className="inline-block px-2 py-1 text-xs bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded"
-                        >
-                          {amenity}
-                        </span>
-                      ))}
-                    </div>
                   </div>
                 </div>
               </li>
