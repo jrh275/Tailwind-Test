@@ -10,7 +10,7 @@ import {
   UserIcon,
   WrenchScrewdriverIcon,
 } from "@heroicons/react/20/solid";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { FieldSelect } from "../shared";
 
 interface Issue {
@@ -104,6 +104,7 @@ const sampleIssues: Issue[] = [
 
 export default function IssuesPanel() {
   const [issues] = useState<Issue[]>(sampleIssues);
+  const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
   const [priorityFilter, setPriorityFilter] = useState("all");
@@ -136,169 +137,162 @@ export default function IssuesPanel() {
     { label: "Interior", value: "Interior" },
   ];
 
-  const filteredIssues = issues.filter((issue) => {
-    if (searchQuery) {
-      const query = searchQuery.toLowerCase();
-      if (
-        !issue.title.toLowerCase().includes(query) &&
-        !issue.description.toLowerCase().includes(query) &&
-        !issue.reportedBy.toLowerCase().includes(query)
-      ) {
-        return false;
-      }
-    }
-    if (statusFilter !== "all" && issue.status !== statusFilter) return false;
-    if (priorityFilter !== "all" && issue.priority !== priorityFilter)
-      return false;
-    if (categoryFilter !== "all" && issue.category !== categoryFilter)
-      return false;
-    return true;
-  });
+  const filteredIssues = useMemo(
+    () =>
+      issues.filter((issue) => {
+        if (searchQuery) {
+          const q = searchQuery.toLowerCase();
+          if (
+            !issue.title.toLowerCase().includes(q) &&
+            !issue.description.toLowerCase().includes(q) &&
+            !issue.reportedBy.toLowerCase().includes(q) &&
+            !(issue.assignedTo || "").toLowerCase().includes(q) &&
+            !(issue.unit || "").toLowerCase().includes(q)
+          ) {
+            return false;
+          }
+        }
+        if (statusFilter !== "all" && issue.status !== statusFilter)
+          return false;
+        if (priorityFilter !== "all" && issue.priority !== priorityFilter)
+          return false;
+        if (categoryFilter !== "all" && issue.category !== categoryFilter)
+          return false;
+        return true;
+      }),
+    [issues, searchQuery, statusFilter, priorityFilter, categoryFilter]
+  );
 
-  const getPriorityStyle = (priority: Issue["priority"]) => {
-    switch (priority) {
-      case "Urgent":
-        return "bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-400";
-      case "High":
-        return "bg-orange-100 text-orange-800 dark:bg-orange-900/20 dark:text-orange-400";
-      case "Medium":
-        return "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-400";
-      case "Low":
-        return "bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400";
-      default:
-        return "bg-gray-100 text-gray-800 dark:bg-gray-900/20 dark:text-gray-400";
-    }
-  };
-
+  // THEME-ALIGNED STATUS PILL COLORS
   const getStatusStyle = (status: Issue["status"]) => {
     switch (status) {
       case "Open":
-        return "bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400";
+        return "bg-royal/10 text-royal dark:bg-royal/20 dark:text-royal";
       case "In Progress":
-        return "bg-purple-100 text-purple-800 dark:bg-purple-900/20 dark:text-purple-400";
+        return "bg-rainy/20 text-sea dark:bg-rainy/30 dark:text-sea";
       case "Resolved":
-        return "bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400";
+        return "bg-spruce/10 text-spruce dark:bg-spruce/20 dark:text-spruce";
       case "Closed":
-        return "bg-gray-100 text-gray-800 dark:bg-gray-900/20 dark:text-gray-400";
+        return "bg-cloudy text-midnight dark:bg-cloudy/20 dark:text-cloudy";
       default:
-        return "bg-gray-100 text-gray-800 dark:bg-gray-900/20 dark:text-gray-400";
+        return "bg-cloudy text-midnight dark:bg-cloudy/20 dark:text-cloudy";
     }
   };
 
   const getStatusIcon = (status: Issue["status"]) => {
     switch (status) {
       case "Open":
-        return <ExclamationTriangleIcon className="h-4 w-4" />;
+        return <ExclamationTriangleIcon className="h-4 w-4 text-royal" />;
       case "In Progress":
-        return <ClockIcon className="h-4 w-4" />;
+        return <ClockIcon className="h-4 w-4 text-sea" />;
       case "Resolved":
-        return <CheckCircleIcon className="h-4 w-4" />;
+        return <CheckCircleIcon className="h-4 w-4 text-spruce" />;
       case "Closed":
-        return <CheckCircleIcon className="h-4 w-4" />;
+        return <CheckCircleIcon className="h-4 w-4 text-cloudy" />;
       default:
-        return <ExclamationTriangleIcon className="h-4 w-4" />;
+        return <ExclamationTriangleIcon className="h-4 w-4 text-cloudy" />;
     }
   };
 
-  const statusCounts = {
-    open: issues.filter((i) => i.status === "Open").length,
-    inProgress: issues.filter((i) => i.status === "In Progress").length,
-    resolved: issues.filter((i) => i.status === "Resolved").length,
-    closed: issues.filter((i) => i.status === "Closed").length,
+  // THEME-ALIGNED PRIORITY PILL COLORS
+  const getPriorityStyle = (priority: Issue["priority"]) => {
+    switch (priority) {
+      case "Urgent":
+        return "bg-cardinal/10 text-cardinal dark:bg-cardinal/20 dark:text-cardinal";
+      case "High":
+        return "bg-pumpkin/10 text-pumpkin dark:bg-pumpkin/20 dark:text-pumpkin";
+      case "Medium":
+        return "bg-rainy/20 text-sea dark:bg-rainy/30 dark:text-sea";
+      case "Low":
+        return "bg-spruce/10 text-spruce dark:bg-spruce/20 dark:text-spruce";
+      default:
+        return "bg-cloudy text-midnight dark:bg-cloudy/20 dark:text-cloudy";
+    }
   };
 
-  const totalEstimatedCost = issues
-    .filter((i) => i.estimatedCost && i.status !== "Closed")
-    .reduce((sum, i) => sum + (i.estimatedCost || 0), 0);
+  const statusCounts = useMemo(
+    () => ({
+      open: issues.filter((i) => i.status === "Open").length,
+      inProgress: issues.filter((i) => i.status === "In Progress").length,
+      resolved: issues.filter((i) => i.status === "Resolved").length,
+      closed: issues.filter((i) => i.status === "Closed").length,
+    }),
+    [issues]
+  );
+
+  const totalEstimatedCost = useMemo(
+    () =>
+      issues
+        .filter((i) => i.estimatedCost && i.status !== "Closed")
+        .reduce((sum, i) => sum + (i.estimatedCost || 0), 0),
+    [issues]
+  );
+
+  const OverviewCard = ({
+    icon,
+    label,
+    value,
+    accentClass,
+  }: {
+    icon: React.ReactNode;
+    label: string;
+    value: number | string;
+    accentClass: string;
+  }) => (
+    <div className="bg-white dark:bg-gray-800 p-6 rounded-lg border border-gray-200 dark:border-gray-700">
+      <div className="flex items-center">
+        <div className="flex-shrink-0">{icon}</div>
+        <div className="ml-4">
+          <h3 className="text-sm font-medium text-gray-900 dark:text-white">
+            {label}
+          </h3>
+          <p className={`text-2xl font-bold ${accentClass}`}>{value}</p>
+        </div>
+      </div>
+    </div>
+  );
 
   return (
     <div className="space-y-6">
       {/* Overview Cards */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-5">
-        <div className="bg-white dark:bg-gray-800 p-6 rounded-lg border border-gray-200 dark:border-gray-700">
-          <div className="flex items-center">
-            <div className="flex-shrink-0">
-              <ExclamationTriangleIcon className="h-8 w-8 text-blue-600" />
+        <OverviewCard
+          icon={<ExclamationTriangleIcon className="h-8 w-8 text-royal" />}
+          label="Open"
+          value={statusCounts.open}
+          accentClass="text-royal"
+        />
+        <OverviewCard
+          icon={<ClockIcon className="h-8 w-8 text-sea" />}
+          label="In Progress"
+          value={statusCounts.inProgress}
+          accentClass="text-sea"
+        />
+        <OverviewCard
+          icon={<CheckCircleIcon className="h-8 w-8 text-spruce" />}
+          label="Resolved"
+          value={statusCounts.resolved}
+          accentClass="text-spruce"
+        />
+        <OverviewCard
+          icon={<CheckCircleIcon className="h-8 w-8 text-cloudy" />}
+          label="Closed"
+          value={statusCounts.closed}
+          accentClass="text-cloudy"
+        />
+        <OverviewCard
+          icon={
+            <div className="h-8 w-8 font-bold text-xl text-spruce leading-8">
+              $
             </div>
-            <div className="ml-4">
-              <h3 className="text-sm font-medium text-gray-900 dark:text-white">
-                Open
-              </h3>
-              <p className="text-2xl font-bold text-blue-600">
-                {statusCounts.open}
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <div className="bg-white dark:bg-gray-800 p-6 rounded-lg border border-gray-200 dark:border-gray-700">
-          <div className="flex items-center">
-            <div className="flex-shrink-0">
-              <ClockIcon className="h-8 w-8 text-purple-600" />
-            </div>
-            <div className="ml-4">
-              <h3 className="text-sm font-medium text-gray-900 dark:text-white">
-                In Progress
-              </h3>
-              <p className="text-2xl font-bold text-purple-600">
-                {statusCounts.inProgress}
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <div className="bg-white dark:bg-gray-800 p-6 rounded-lg border border-gray-200 dark:border-gray-700">
-          <div className="flex items-center">
-            <div className="flex-shrink-0">
-              <CheckCircleIcon className="h-8 w-8 text-green-600" />
-            </div>
-            <div className="ml-4">
-              <h3 className="text-sm font-medium text-gray-900 dark:text-white">
-                Resolved
-              </h3>
-              <p className="text-2xl font-bold text-green-600">
-                {statusCounts.resolved}
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <div className="bg-white dark:bg-gray-800 p-6 rounded-lg border border-gray-200 dark:border-gray-700">
-          <div className="flex items-center">
-            <div className="flex-shrink-0">
-              <CheckCircleIcon className="h-8 w-8 text-gray-600" />
-            </div>
-            <div className="ml-4">
-              <h3 className="text-sm font-medium text-gray-900 dark:text-white">
-                Closed
-              </h3>
-              <p className="text-2xl font-bold text-gray-600">
-                {statusCounts.closed}
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <div className="bg-white dark:bg-gray-800 p-6 rounded-lg border border-gray-200 dark:border-gray-700">
-          <div className="flex items-center">
-            <div className="flex-shrink-0">
-              <div className="h-8 w-8 text-emerald-600 font-bold text-xl">
-                $
-              </div>
-            </div>
-            <div className="ml-4">
-              <h3 className="text-sm font-medium text-gray-900 dark:text-white">
-                Est. Cost
-              </h3>
-              <p className="text-2xl font-bold text-emerald-600">
-                ${totalEstimatedCost.toLocaleString()}
-              </p>
-            </div>
-          </div>
-        </div>
+          }
+          label="Est. Cost"
+          value={`$${totalEstimatedCost.toLocaleString()}`}
+          accentClass="text-spruce"
+        />
       </div>
 
-      {/* Search and Filters */}
+      {/* Search + Filters + Grid/List Toggle + New Issue */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex-1 relative">
           <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -306,10 +300,10 @@ export default function IssuesPanel() {
           </div>
           <input
             type="text"
-            placeholder="Search issues, descriptions, or reporters..."
+            placeholder="Search issues, assignees, units, reporters…"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-blue-500 focus:border-blue-500 text-sm dark:bg-gray-800 dark:border-gray-600 dark:text-white"
+            className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-royal focus:border-royal text-sm dark:bg-gray-800 dark:border-gray-600 dark:text-white"
           />
         </div>
 
@@ -320,14 +314,12 @@ export default function IssuesPanel() {
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
           />
-
           <FieldSelect
             id="priorityFilter"
             options={priorityOptions}
             value={priorityFilter}
             onChange={(e) => setPriorityFilter(e.target.value)}
           />
-
           <FieldSelect
             id="categoryFilter"
             options={categoryOptions}
@@ -335,108 +327,321 @@ export default function IssuesPanel() {
             onChange={(e) => setCategoryFilter(e.target.value)}
           />
 
-          <button className="flex items-center gap-2 rounded-md bg-blue-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500">
+          {/* Grid/List Toggle */}
+          <div className="flex items-center gap-1 border border-gray-300 rounded-md">
+            <button
+              onClick={() => setViewMode("grid")}
+              className={`px-3 py-2 text-sm font-medium rounded-l-md ${
+                viewMode === "grid"
+                  ? "bg-royal/10 text-royal hover:bg-royal/20 dark:bg-royal/20 dark:text-royal dark:hover:bg-royal/30"
+                  : "bg-white text-gray-700 hover:bg-gray-50 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700"
+              }`}
+            >
+              Grid
+            </button>
+            <button
+              onClick={() => setViewMode("list")}
+              className={`px-3 py-2 text-sm font-medium rounded-r-md ${
+                viewMode === "list"
+                  ? "bg-royal/10 text-royal hover:bg-royal/20 dark:bg-royal/20 dark:text-royal dark:hover:bg-royal/30"
+                  : "bg-white text-gray-700 hover:bg-gray-50 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700"
+              }`}
+            >
+              List
+            </button>
+          </div>
+
+          {/* New Issue */}
+          <button className="flex items-center gap-2 rounded-md bg-royal/10 px-3 py-2 text-sm font-semibold text-royal shadow-xs hover:bg-royal/20 dark:bg-royal/20 dark:text-royal dark:shadow-none dark:hover:bg-royal/30">
             <PlusIcon className="h-4 w-4" />
             New Issue
           </button>
         </div>
       </div>
 
-      {/* Issues List */}
-      <div className="bg-white dark:bg-gray-800 shadow overflow-hidden sm:rounded-md">
-        <ul className="divide-y divide-gray-200 dark:divide-gray-700">
+      {/* Issues Display */}
+      {viewMode === "grid" ? (
+        // GRID VIEW
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {filteredIssues.map((issue) => (
-            <li key={issue.id}>
-              <div className="px-4 py-4 sm:px-6">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center">
-                    <p className="text-lg font-medium text-blue-600 truncate">
-                      {issue.title}
-                    </p>
-                    <div className="ml-3 flex items-center gap-2">
-                      <span
-                        className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusStyle(issue.status)}`}
-                      >
-                        {getStatusIcon(issue.status)}
-                        {issue.status}
-                      </span>
-                      <span
-                        className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getPriorityStyle(issue.priority)}`}
-                      >
-                        {issue.priority}
-                      </span>
-                    </div>
+            <div
+              key={issue.id}
+              className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6 flex flex-col justify-between"
+            >
+              <div>
+                <div className="flex items-start justify-between gap-3">
+                  <h3 className="text-lg font-semibold text-sea">
+                    {issue.title}
+                  </h3>
+                  <div className="flex items-center gap-2">
+                    <span
+                      className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusStyle(
+                        issue.status
+                      )}`}
+                    >
+                      {getStatusIcon(issue.status)}
+                      {issue.status}
+                    </span>
+                    <span
+                      className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getPriorityStyle(
+                        issue.priority
+                      )}`}
+                    >
+                      {issue.priority}
+                    </span>
                   </div>
-                  <div className="ml-2 flex-shrink-0 flex items-center gap-4">
+                </div>
+
+                <p className="mt-2 text-sm text-gray-600 dark:text-gray-300 line-clamp-3">
+                  {issue.description}
+                </p>
+
+                <div className="mt-4 space-y-2 text-sm text-gray-600 dark:text-gray-300">
+                  <p>
+                    <span className="font-medium">Category:</span>{" "}
+                    {issue.category}
+                  </p>
+                  <p className="flex items-center">
+                    <UserIcon className="mr-1.5 h-4 w-4" />
+                    <span>
+                      <span className="font-medium">Reported by:</span>{" "}
+                      {issue.reportedBy}
+                    </span>
+                  </p>
+                  {issue.assignedTo && (
+                    <p className="flex items-center">
+                      <WrenchScrewdriverIcon className="mr-1.5 h-4 w-4" />
+                      <span>
+                        <span className="font-medium">Assigned to:</span>{" "}
+                        {issue.assignedTo}
+                      </span>
+                    </p>
+                  )}
+                  <p>
+                    <span className="font-medium">Reported:</span>{" "}
+                    {issue.reportedDate}
+                    {issue.dueDate && (
+                      <span className="ml-3">
+                        <span className="font-medium">Due:</span>{" "}
+                        {issue.dueDate}
+                      </span>
+                    )}
+                    {issue.completedDate && (
+                      <span className="ml-3">
+                        <span className="font-medium">Completed:</span>{" "}
+                        {issue.completedDate}
+                      </span>
+                    )}
+                  </p>
+                </div>
+
+                {(issue.unit || issue.estimatedCost) && (
+                  <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-600 flex items-center justify-between">
+                    {issue.unit ? (
+                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-cloudy text-midnight dark:bg-gray-700 dark:text-gray-200">
+                        Unit {issue.unit}
+                      </span>
+                    ) : (
+                      <span />
+                    )}
                     {issue.estimatedCost && (
                       <p className="text-lg font-bold text-gray-900 dark:text-white">
                         ${issue.estimatedCost.toLocaleString()}
                       </p>
                     )}
-                    {issue.unit && (
-                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200">
-                        Unit {issue.unit}
-                      </span>
-                    )}
                   </div>
-                </div>
-
-                <div className="mt-2">
-                  <p className="text-sm text-gray-600 dark:text-gray-300">
-                    {issue.description}
-                  </p>
-                </div>
-
-                <div className="mt-2 sm:flex sm:justify-between">
-                  <div className="sm:flex sm:items-center sm:gap-6">
-                    <p className="flex items-center text-sm text-gray-500 dark:text-gray-400">
-                      <UserIcon className="flex-shrink-0 mr-1.5 h-4 w-4" />
-                      Reported by {issue.reportedBy}
-                    </p>
-                    {issue.assignedTo && (
-                      <p className="flex items-center text-sm text-gray-500 dark:text-gray-400 mt-2 sm:mt-0">
-                        <WrenchScrewdriverIcon className="flex-shrink-0 mr-1.5 h-4 w-4" />
-                        Assigned to {issue.assignedTo}
-                      </p>
-                    )}
-                    <p className="flex items-center text-sm text-gray-500 dark:text-gray-400 mt-2 sm:mt-0">
-                      <span className="font-medium">Category:</span>
-                      <span className="ml-1">{issue.category}</span>
-                    </p>
-                  </div>
-                  <div className="mt-2 flex items-center text-sm text-gray-500 dark:text-gray-400 sm:mt-0">
-                    <p>
-                      <span className="font-medium">Reported:</span>{" "}
-                      {issue.reportedDate}
-                      {issue.dueDate && (
-                        <span className="ml-3">
-                          <span className="font-medium">Due:</span>{" "}
-                          {issue.dueDate}
-                        </span>
-                      )}
-                      {issue.completedDate && (
-                        <span className="ml-3">
-                          <span className="font-medium">Completed:</span>{" "}
-                          {issue.completedDate}
-                        </span>
-                      )}
-                    </p>
-                  </div>
-                </div>
-
-                <div className="mt-3 flex justify-end">
-                  <button className="text-blue-600 hover:text-blue-800 text-sm font-medium mr-4">
-                    View Details
-                  </button>
-                  <button className="text-blue-600 hover:text-blue-800 text-sm font-medium">
-                    Edit Issue
-                  </button>
-                </div>
+                )}
               </div>
-            </li>
+
+              {/* Actions: icons only, sea color */}
+              <div className="mt-4 flex items-center justify-end gap-4">
+                <button
+                  className="text-sea hover:text-sea"
+                  aria-label="View Details"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth={1.5}
+                    stroke="currentColor"
+                    className="size-5"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z"
+                    />
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"
+                    />
+                  </svg>
+                </button>
+
+                <button
+                  className="text-sea hover:text-sea"
+                  aria-label="Edit Issue"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth={1.5}
+                    stroke="currentColor"
+                    className="size-6"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L6.832 19.82a4.5 4.5 0 0 1-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 0 1 1.13-1.897L16.863 4.487Zm0 0L19.5 7.125"
+                    />
+                  </svg>
+                </button>
+              </div>
+            </div>
           ))}
-        </ul>
-      </div>
+        </div>
+      ) : (
+        // LIST VIEW
+        <div className="bg-white dark:bg-gray-800 shadow overflow-hidden sm:rounded-md">
+          <ul className="divide-y divide-gray-200 dark:divide-gray-700">
+            {filteredIssues.map((issue) => (
+              <li key={issue.id}>
+                <div className="px-4 py-4 sm:px-6">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <p className="text-lg font-medium text-sea truncate">
+                        {issue.title}
+                      </p>
+                      <span
+                        className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusStyle(
+                          issue.status
+                        )}`}
+                      >
+                        {getStatusIcon(issue.status)}
+                        {issue.status}
+                      </span>
+                      <span
+                        className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getPriorityStyle(
+                          issue.priority
+                        )}`}
+                      >
+                        {issue.priority}
+                      </span>
+                    </div>
+
+                    <div className="ml-2 flex items-center gap-3">
+                      {issue.estimatedCost && (
+                        <p className="text-lg font-bold text-gray-900 dark:text-white">
+                          ${issue.estimatedCost.toLocaleString()}
+                        </p>
+                      )}
+                      {issue.unit && (
+                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-cloudy text-midnight dark:bg-gray-700 dark:text-gray-200">
+                          Unit {issue.unit}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="mt-2 sm:flex sm:justify-between">
+                    <p className="text-sm text-gray-600 dark:text-gray-300 sm:max-w-3xl">
+                      {issue.description}
+                    </p>
+                    <div className="mt-2 text-sm text-gray-500 dark:text-gray-400 sm:mt-0 sm:text-right">
+                      <p>
+                        <span className="font-medium">Reported:</span>{" "}
+                        {issue.reportedDate}
+                        {issue.dueDate && (
+                          <span className="ml-3">
+                            <span className="font-medium">Due:</span>{" "}
+                            {issue.dueDate}
+                          </span>
+                        )}
+                        {issue.completedDate && (
+                          <span className="ml-3">
+                            <span className="font-medium">Completed:</span>{" "}
+                            {issue.completedDate}
+                          </span>
+                        )}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="mt-2 sm:flex sm:justify-between">
+                    <div className="sm:flex sm:items-center sm:gap-6">
+                      <p className="flex items-center text-sm text-gray-500 dark:text-gray-400">
+                        <UserIcon className="flex-shrink-0 mr-1.5 h-4 w-4" />
+                        Reported by {issue.reportedBy}
+                      </p>
+                      {issue.assignedTo && (
+                        <p className="flex items-center text-sm text-gray-500 dark:text-gray-400 mt-2 sm:mt-0">
+                          <WrenchScrewdriverIcon className="flex-shrink-0 mr-1.5 h-4 w-4" />
+                          Assigned to {issue.assignedTo}
+                        </p>
+                      )}
+                      <p className="flex items-center text-sm text-gray-500 dark:text-gray-400 mt-2 sm:mt-0">
+                        <span className="font-medium">Category:</span>
+                        <span className="ml-1">{issue.category}</span>
+                      </p>
+                    </div>
+
+                    {/* Actions: icons only, sea color */}
+                    <div className="mt-3 flex justify-end gap-4 sm:mt-0">
+                      <button
+                        className="text-sea hover:text-sea"
+                        aria-label="View Details"
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          strokeWidth={1.5}
+                          stroke="currentColor"
+                          className="size-5"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z"
+                          />
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"
+                          />
+                        </svg>
+                      </button>
+
+                      <button
+                        className="text-sea hover:text-sea"
+                        aria-label="Edit Issue"
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          strokeWidth={1.5}
+                          stroke="currentColor"
+                          className="size-6"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L6.832 19.82a4.5 4.5 0 0 1-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 0 1 1.13-1.897L16.863 4.487Zm0 0L19.5 7.125"
+                          />
+                        </svg>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
 
       {filteredIssues.length === 0 && (
         <div className="text-center py-12">

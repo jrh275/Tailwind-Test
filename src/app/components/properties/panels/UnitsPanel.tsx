@@ -5,7 +5,6 @@ import {
   CheckCircleIcon,
   HomeIcon,
   MagnifyingGlassIcon,
-  PencilIcon,
   PlusIcon,
   UserIcon,
   XCircleIcon,
@@ -20,7 +19,7 @@ interface Unit {
   type: string;
   size: number;
   monthlyRent: number;
-  status: "Occupied" | "Vacant" | "Maintenance" | "Unavailable";
+  status: "Occupied" | "Vacant" | "Unavailable";
   tenant?: {
     name: string;
     company: string;
@@ -28,7 +27,7 @@ interface Unit {
     leaseEnd: string;
     phone: string;
   };
-  amenities: string[];
+  amenities: string[]; // kept in data model, not displayed
 }
 
 const sampleUnits: Unit[] = [
@@ -36,7 +35,7 @@ const sampleUnits: Unit[] = [
     id: "1",
     number: "101",
     floor: 1,
-    type: "1 Bedroom",
+    type: "Retail",
     size: 1200,
     monthlyRent: 2800,
     status: "Occupied",
@@ -53,8 +52,8 @@ const sampleUnits: Unit[] = [
     id: "2",
     number: "102",
     floor: 1,
-    type: "2 Bedroom",
-    size: 1500,
+    type: "Warehouse",
+    size: 15000,
     monthlyRent: 3200,
     status: "Vacant",
     amenities: ["Parking", "Balcony"],
@@ -80,10 +79,10 @@ const sampleUnits: Unit[] = [
     id: "4",
     number: "202",
     floor: 2,
-    type: "3 Bedroom",
-    size: 1800,
+    type: "Warehouse",
+    size: 18000,
     monthlyRent: 3800,
-    status: "Maintenance",
+    status: "Unavailable", // was "Maintenance"
     amenities: ["Parking", "Balcony", "Storage"],
   },
   {
@@ -126,16 +125,13 @@ export default function UnitsPanel() {
     { label: "All Statuses", value: "all" },
     { label: "Occupied", value: "Occupied" },
     { label: "Vacant", value: "Vacant" },
-    { label: "Maintenance", value: "Maintenance" },
     { label: "Unavailable", value: "Unavailable" },
   ];
 
   const typeOptions = [
     { label: "All Types", value: "all" },
-    { label: "1 Bedroom", value: "1 Bedroom" },
-    { label: "2 Bedroom", value: "2 Bedroom" },
-    { label: "3 Bedroom", value: "3 Bedroom" },
     { label: "Office", value: "Office" },
+    { label: "Retail", value: "Retail" },
     { label: "Warehouse", value: "Warehouse" },
   ];
 
@@ -155,34 +151,38 @@ export default function UnitsPanel() {
     return true;
   });
 
+  // THEME-ALIGNED STATUS PILL COLORS
   const getStatusStyle = (status: Unit["status"]) => {
     switch (status) {
       case "Occupied":
-        return "bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400";
+        return "bg-spruce/10 text-spruce dark:bg-spruce/20 dark:text-spruce";
       case "Vacant":
-        return "bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400";
-      case "Maintenance":
-        return "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-400";
+        return "bg-royal/10 text-royal dark:bg-royal/20 dark:text-royal";
       case "Unavailable":
-        return "bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-400";
+        return "bg-cardinal/10 text-cardinal dark:bg-cardinal/20 dark:text-cardinal";
       default:
-        return "bg-gray-100 text-gray-800 dark:bg-gray-900/20 dark:text-gray-400";
+        return "bg-cloudy text-midnight dark:bg-cloudy/20 dark:text-cloudy";
     }
   };
 
+  // THEME-ALIGNED STATUS ICON COLORS
   const getStatusIcon = (status: Unit["status"]) => {
     switch (status) {
       case "Occupied":
-        return <CheckCircleIcon className="h-4 w-4" />;
+        return <CheckCircleIcon className="h-4 w-4 text-spruce" />;
       case "Vacant":
-        return <HomeIcon className="h-4 w-4" />;
-      case "Maintenance":
-        return <PencilIcon className="h-4 w-4" />;
+        return <HomeIcon className="h-4 w-4 text-royal" />;
       case "Unavailable":
-        return <XCircleIcon className="h-4 w-4" />;
+        return <XCircleIcon className="h-4 w-4 text-cardinal" />;
       default:
-        return <HomeIcon className="h-4 w-4" />;
+        return <HomeIcon className="h-4 w-4 text-cloudy" />;
     }
+  };
+
+  // Handler for the Past Leases chip (wire to router/modal as needed)
+  const handlePastLeases = (unit: Unit) => {
+    // TODO: replace with your navigation or modal open
+    console.log("Open Past Leases for Unit", unit.number, unit.id);
   };
 
   return (
@@ -198,7 +198,7 @@ export default function UnitsPanel() {
             placeholder="Search units, tenants, or companies..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-blue-500 focus:border-blue-500 text-sm dark:bg-gray-800 dark:border-gray-600 dark:text-white"
+            className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-royal focus:border-royal text-sm dark:bg-gray-800 dark:border-gray-600 dark:text-white"
           />
         </div>
 
@@ -217,13 +217,14 @@ export default function UnitsPanel() {
             onChange={(e) => setTypeFilter(e.target.value)}
           />
 
+          {/* Grid/List Toggle (matches Add Unit) */}
           <div className="flex items-center gap-1 border border-gray-300 rounded-md">
             <button
               onClick={() => setViewMode("grid")}
               className={`px-3 py-2 text-sm font-medium rounded-l-md ${
                 viewMode === "grid"
-                  ? "bg-blue-600 text-white"
-                  : "bg-white text-gray-700 hover:bg-gray-50"
+                  ? "bg-royal/10 text-royal hover:bg-royal/20 dark:bg-royal/20 dark:text-royal dark:hover:bg-royal/30"
+                  : "bg-white text-gray-700 hover:bg-gray-50 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700"
               }`}
             >
               Grid
@@ -232,15 +233,16 @@ export default function UnitsPanel() {
               onClick={() => setViewMode("list")}
               className={`px-3 py-2 text-sm font-medium rounded-r-md ${
                 viewMode === "list"
-                  ? "bg-blue-600 text-white"
-                  : "bg-white text-gray-700 hover:bg-gray-50"
+                  ? "bg-royal/10 text-royal hover:bg-royal/20 dark:bg-royal/20 dark:text-royal dark:hover:bg-royal/30"
+                  : "bg-white text-gray-700 hover:bg-gray-50 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700"
               }`}
             >
               List
             </button>
           </div>
 
-          <button className="flex items-center gap-2 rounded-md bg-blue-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500">
+          {/* Add Unit button (royal) */}
+          <button className="flex items-center gap-2 rounded-md bg-royal/10 px-3 py-2 text-sm font-semibold text-royal shadow-xs hover:bg-royal/20 dark:bg-royal/20 dark:text-royal dark:shadow-none dark:hover:bg-royal/30">
             <PlusIcon className="h-4 w-4" />
             Add Unit
           </button>
@@ -253,62 +255,91 @@ export default function UnitsPanel() {
           {filteredUnits.map((unit) => (
             <div
               key={unit.id}
-              className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6"
+              className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6 flex flex-col justify-between"
             >
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
-                  Unit {unit.number}
-                </h3>
-                <span
-                  className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusStyle(unit.status)}`}
-                >
-                  {getStatusIcon(unit.status)}
-                  {unit.status}
-                </span>
-              </div>
-
-              <div className="space-y-2 text-sm text-gray-600 dark:text-gray-300">
-                <p>
-                  <span className="font-medium">Floor:</span> {unit.floor}
-                </p>
-                <p>
-                  <span className="font-medium">Type:</span> {unit.type}
-                </p>
-                <p>
-                  <span className="font-medium">Size:</span>{" "}
-                  {unit.size.toLocaleString()} sq ft
-                </p>
-                <p>
-                  <span className="font-medium">Rent:</span> $
-                  {unit.monthlyRent.toLocaleString()}/month
-                </p>
-              </div>
-
-              {unit.tenant && (
-                <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-600">
-                  <h4 className="font-medium text-gray-900 dark:text-white mb-2">
-                    Tenant
-                  </h4>
-                  <div className="space-y-1 text-sm text-gray-600 dark:text-gray-300">
-                    <p>
-                      <span className="font-medium">Name:</span>{" "}
-                      {unit.tenant.name}
-                    </p>
-                    <p>
-                      <span className="font-medium">Company:</span>{" "}
-                      {unit.tenant.company}
-                    </p>
-                    <p>
-                      <span className="font-medium">Lease:</span>{" "}
-                      {unit.tenant.leaseStart} - {unit.tenant.leaseEnd}
-                    </p>
-                  </div>
+              <div>
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+                    Unit {unit.number}
+                  </h3>
+                  <span
+                    className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusStyle(
+                      unit.status
+                    )}`}
+                  >
+                    {getStatusIcon(unit.status)}
+                    {unit.status}
+                  </span>
                 </div>
-              )}
 
-              <div className="mt-4 flex justify-end">
-                <button className="text-blue-600 hover:text-blue-800 text-sm font-medium">
-                  Edit Unit
+                <div className="space-y-2 text-sm text-gray-600 dark:text-gray-300">
+                  <p>
+                    <span className="font-medium">Floor:</span> {unit.floor}
+                  </p>
+                  <p>
+                    <span className="font-medium">Type:</span> {unit.type}
+                  </p>
+                  <p>
+                    <span className="font-medium">Size:</span>{" "}
+                    {unit.size.toLocaleString()} sq ft
+                  </p>
+                  <p>
+                    <span className="font-medium">Rent:</span> $
+                    {unit.monthlyRent.toLocaleString()}/month
+                  </p>
+                </div>
+
+                {unit.tenant && (
+                  <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-600">
+                    <h4 className="font-medium text-gray-900 dark:text-white mb-2">
+                      Tenant
+                    </h4>
+                    <div className="space-y-1 text-sm text-gray-600 dark:text-gray-300">
+                      <p>
+                        <span className="font-medium">Name:</span>{" "}
+                        {unit.tenant.name}
+                      </p>
+                      <p>
+                        <span className="font-medium">Company:</span>{" "}
+                        {unit.tenant.company}
+                      </p>
+                      <p>
+                        <span className="font-medium">Lease:</span>{" "}
+                        {unit.tenant.leaseStart} - {unit.tenant.leaseEnd}
+                      </p>
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* Bottom row: Past Leases chip (left) + Edit icon (right) */}
+              <div className="mt-4 flex items-center justify-between">
+                <button
+                  onClick={() => handlePastLeases(unit)}
+                  className="inline-flex items-center rounded-full bg-royal/10 px-3 py-1 text-xs font-medium text-royal hover:bg-royal/20 dark:bg-royal/20 dark:text-royal dark:hover:bg-royal/30"
+                  aria-label={`View past leases for Unit ${unit.number}`}
+                >
+                  Past Leases
+                </button>
+
+                <button
+                  className="text-sea hover:text-sea"
+                  aria-label={`Edit Unit ${unit.number}`}
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth={1.5}
+                    stroke="currentColor"
+                    className="size-6"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L6.832 19.82a4.5 4.5 0 0 1-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 0 1 1.13-1.897L16.863 4.487Zm0 0L19.5 7.125"
+                    />
+                  </svg>
                 </button>
               </div>
             </div>
@@ -322,20 +353,52 @@ export default function UnitsPanel() {
                 <div className="px-4 py-4 sm:px-6">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center">
-                      <p className="text-lg font-medium text-blue-600 truncate">
+                      <p className="text-lg font-medium text-sea truncate">
                         Unit {unit.number}
                       </p>
                       <span
-                        className={`ml-3 inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusStyle(unit.status)}`}
+                        className={`ml-3 inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusStyle(
+                          unit.status
+                        )}`}
                       >
                         {getStatusIcon(unit.status)}
                         {unit.status}
                       </span>
                     </div>
-                    <div className="ml-2 flex-shrink-0">
+
+                    <div className="ml-2 flex items-center gap-3">
                       <p className="text-lg font-bold text-gray-900 dark:text-white">
                         ${unit.monthlyRent.toLocaleString()}/mo
                       </p>
+
+                      {/* Past Leases chip in list row */}
+                      <button
+                        onClick={() => handlePastLeases(unit)}
+                        className="inline-flex items-center rounded-full bg-royal/10 px-3 py-1 text-xs font-medium text-royal hover:bg-royal/20 dark:bg-royal/20 dark:text-royal dark:hover:bg-royal/30"
+                        aria-label={`View past leases for Unit ${unit.number}`}
+                      >
+                        Past Leases
+                      </button>
+
+                      <button
+                        className="text-sea hover:sea"
+                        aria-label={`Edit Unit ${unit.number}`}
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          strokeWidth={1.5}
+                          stroke="currentColor"
+                          className="size-6"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L6.832 19.82a4.5 4.5 0 0 1-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 0 1 1.13-1.897L16.863 4.487Zm0 0L19.5 7.125"
+                          />
+                        </svg>
+                      </button>
                     </div>
                   </div>
                   <div className="mt-2 sm:flex sm:justify-between">
