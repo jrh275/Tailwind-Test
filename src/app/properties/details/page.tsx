@@ -125,9 +125,6 @@ export default function PropertiesDetailsPage() {
       {/* Tabs */}
       <div className="px-4 sm:px-6 lg:px-8">
         <div className="pb-4">
-          <h3 className="text-base font-semibold text-gray-900 dark:text-white">
-            4033 NW Yeon Avenue
-          </h3>
           <div className="mt-3 sm:mt-4">
             {/* Mobile select */}
             <div className="grid grid-cols-1 sm:hidden">
@@ -155,7 +152,7 @@ export default function PropertiesDetailsPage() {
               <nav
                 role="tablist"
                 aria-label="Property sections"
-                className="flex space-x-8"
+                className="flex space-x-8 border-b border-gray-200 dark:border-white/10"
               >
                 {TABS.map((tab) => {
                   const isActive = tab.key === active;

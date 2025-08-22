@@ -83,16 +83,13 @@ export default function AppLayoutWrapper({
                   className="-m-2.5 p-2.5"
                 >
                   <span className="sr-only">Close sidebar</span>
-                  <XMarkIcon
-                    aria-hidden="true"
-                    className="size-6 text-base-sea"
-                  />
+                  <XMarkIcon aria-hidden="true" className="size-6 text-white" />
                 </button>
               </div>
             </TransitionChild>
 
             {/* Sidebar (mobile) */}
-            <div className="relative flex grow flex-col gap-y-5 overflow-y-auto bg-[var(--color-mist)] px-6 pb-4">
+            <div className="relative flex grow flex-col gap-y-5 overflow-y-auto bg-[var(--color-midnight)] px-6 pb-4 text-white">
               <div className="relative flex h-16 shrink-0 items-center">
                 <div className="h-8 w-8 rounded-md bg-brand-royal" />
               </div>
@@ -105,11 +102,11 @@ export default function AppLayoutWrapper({
                         <li key={item.name}>
                           <a
                             href={item.href}
-                            className="group flex gap-x-3 rounded-md p-2 text-14-20 font-medium text-base-sea hover:bg-base-cloudy hover:text-base-sea"
+                            className="group flex gap-x-3 rounded-md p-2 text-14-20 font-medium text-white hover:bg-white/10"
                           >
                             <item.icon
                               aria-hidden="true"
-                              className="size-6 shrink-0 text-base-sea group-hover:text-base-sea"
+                              className="size-6 shrink-0 text-white"
                             />
                             {item.name}
                           </a>
@@ -121,11 +118,11 @@ export default function AppLayoutWrapper({
                   <li className="mt-auto">
                     <a
                       href="#"
-                      className="group -mx-2 flex gap-x-3 rounded-md p-2 text-14-20 font-medium text-base-sea hover:bg-base-cloudy"
+                      className="group -mx-2 flex gap-x-3 rounded-md p-2 text-14-20 font-medium text-white hover:bg-white/10"
                     >
                       <Cog6ToothIcon
                         aria-hidden="true"
-                        className="size-6 shrink-0 text-base-sea group-hover:text-base-sea"
+                        className="size-6 shrink-0 text-white"
                       />
                       Settings
                     </a>
@@ -138,8 +135,8 @@ export default function AppLayoutWrapper({
       </Dialog>
 
       {/* Desktop sidebar */}
-      <div className="hidden lg:fixed lg:inset-y-0 lg:z-50 lg:flex lg:w-72 lg:flex-col bg-[var(--color-mist)]">
-        <div className="flex grow flex-col gap-y-5 overflow-y-auto border-r border-base-cloudy bg-[var(--color-mist)] px-6 pb-4">
+      <div className="hidden lg:fixed lg:inset-y-0 lg:z-50 lg:flex lg:w-72 lg:flex-col bg-[var(--color-midnight)] text-white">
+        <div className="flex grow flex-col gap-y-5 overflow-y-auto border-r border-base-cloudy bg-[var(--color-midnight)] px-6 pb-4">
           <div className="flex h-16 shrink-0 items-center">
             <div className="h-8 w-8 rounded-md bg-brand-royal" />
           </div>
@@ -152,11 +149,11 @@ export default function AppLayoutWrapper({
                     <li key={item.name}>
                       <a
                         href={item.href}
-                        className="group flex gap-x-3 rounded-md p-2 text-14-20 font-medium text-base-sea hover:bg-base-cloudy hover:text-base-sea"
+                        className="group flex gap-x-3 rounded-md p-2 text-14-20 font-medium text-white hover:bg-white/10"
                       >
                         <item.icon
                           aria-hidden="true"
-                          className="size-6 shrink-0 text-base-sea group-hover:text-base-sea"
+                          className="size-6 shrink-0 text-white"
                         />
                         {item.name}
                       </a>
@@ -168,11 +165,11 @@ export default function AppLayoutWrapper({
               <li className="mt-auto">
                 <a
                   href="#"
-                  className="group -mx-2 flex gap-x-3 rounded-md p-2 text-14-20 font-medium text-base-sea hover:bg-base-cloudy"
+                  className="group -mx-2 flex gap-x-3 rounded-md p-2 text-14-20 font-medium text-white hover:bg-white/10"
                 >
                   <Cog6ToothIcon
                     aria-hidden="true"
-                    className="size-6 shrink-0 text-base-sea group-hover:text-base-sea"
+                    className="size-6 shrink-0 text-white"
                   />
                   Settings
                 </a>
@@ -184,7 +181,7 @@ export default function AppLayoutWrapper({
 
       {/* Top bar */}
       <div className="lg:pl-72">
-        <div className="sticky top-0 z-40 flex h-16 shrink-0 items-center gap-x-4 border-b border-base-cloudy bg-base-white px-4 shadow-xs sm:gap-x-6 sm:px-6 lg:px-8">
+        <div className="sticky top-0 z-40 flex h-16 shrink-0 items-center gap-x-4 border-b border-base-cloudy bg-white px-4 shadow-xs sm:gap-x-6 sm:px-6 lg:px-8">
           <button
             type="button"
             onClick={() => setSidebarOpen(true)}
@@ -205,7 +202,7 @@ export default function AppLayoutWrapper({
                 name="search"
                 placeholder="Search"
                 aria-label="Search"
-                className="col-start-1 row-start-1 block size-full bg-base-white pl-8 text-base text-typography-midnight outline-hidden placeholder:text-base-foggy sm:text-14-20"
+                className="col-start-1 row-start-1 block size-full bg-white pl-8 text-base text-typography-midnight outline-hidden placeholder:text-base-foggy sm:text-14-20"
               />
               <MagnifyingGlassIcon
                 aria-hidden="true"

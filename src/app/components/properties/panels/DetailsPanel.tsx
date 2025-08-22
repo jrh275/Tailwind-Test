@@ -94,7 +94,43 @@ export default function DetailsPanel() {
           </dd>
         </div>
 
-        {/* Line four */}
+        {/* Line four - Year Built + Occupancy Rate */}
+        <div className="px-4 py-6 sm:px-0">
+          <dt className="text-sm/6 font-medium text-gray-900 dark:text-white">
+            Year Built
+          </dt>
+          <dd className="mt-2 sm:mt-2">
+            <FieldInput id="yearBuilt" type="number" placeholder="e.g., 1985" />
+          </dd>
+        </div>
+
+        <div className="px-4 py-6 sm:px-0">
+          <dt className="text-sm/6 font-medium text-gray-900 dark:text-white">
+            Occupancy Rate (%)
+          </dt>
+          <dd className="mt-2 sm:mt-2">
+            <FieldInput
+              id="occupancyRate"
+              type="number"
+              placeholder="e.g., 92"
+            />
+          </dd>
+        </div>
+
+        {/* Line five - Rentable & Total SqFt */}
+        <div className="px-4 py-6 sm:px-0">
+          <dt className="text-sm/6 font-medium text-gray-900 dark:text-white">
+            Rentable Square Footage
+          </dt>
+          <dd className="mt-2 sm:mt-2">
+            <FieldInput
+              id="rentableSqFt"
+              type="number"
+              placeholder="e.g., 120000"
+            />
+          </dd>
+        </div>
+
         <div className="px-4 py-6 sm:px-0">
           <dt className="text-sm/6 font-medium text-gray-900 dark:text-white">
             Total Square Footage
@@ -108,12 +144,26 @@ export default function DetailsPanel() {
           </dd>
         </div>
 
+        {/* Line six - Current & Next Month's Rent */}
         <div className="px-4 py-6 sm:px-0">
           <dt className="text-sm/6 font-medium text-gray-900 dark:text-white">
-            Year Built
+            Current Rent
           </dt>
           <dd className="mt-2 sm:mt-2">
-            <FieldInput id="yearBuilt" type="number" placeholder="e.g., 1985" />
+            <FieldInput
+              id="currentRent"
+              type="number"
+              placeholder="e.g., 50000"
+            />
+          </dd>
+        </div>
+
+        <div className="px-4 py-6 sm:px-0">
+          <dt className="text-sm/6 font-medium text-gray-900 dark:text-white">
+            Next Month's Rent
+          </dt>
+          <dd className="mt-2 sm:mt-2">
+            <FieldInput id="nextRent" type="number" placeholder="e.g., 52000" />
           </dd>
         </div>
       </dl>
@@ -145,9 +195,11 @@ export default function DetailsPanel() {
           <h3 className="text-sm font-medium text-gray-900 dark:text-white">
             Property Documents
           </h3>
-          <button className="flex items-center gap-2 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 dark:bg-white/10 dark:text-white dark:ring-white/20 dark:hover:bg-white/20">
-            <PlusIcon className="h-4 w-4" />
-            Upload Document
+          <button
+            type="button"
+            className="rounded-full bg-gray-900 p-1 text-white shadow-sm hover:bg-gray-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-900 dark:bg-gray-700 dark:hover:bg-gray-600"
+          >
+            <PlusIcon aria-hidden="true" className="size-5" />
           </button>
         </div>
 
@@ -165,9 +217,8 @@ export default function DetailsPanel() {
                 </p>
               </div>
             </div>
-            <button className="flex items-center gap-1 text-sm text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
+            <button className="flex w-7 justify-center rounded-full p-1 text-sm text-gray-900 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
               <ArrowDownTrayIcon className="h-4 w-4" />
-              Download
             </button>
           </li>
 
@@ -183,9 +234,8 @@ export default function DetailsPanel() {
                 </p>
               </div>
             </div>
-            <button className="flex items-center gap-1 text-sm text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
+            <button className="flex w-7 justify-center rounded-full p-1 text-sm text-gray-900 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
               <ArrowDownTrayIcon className="h-4 w-4" />
-              Download
             </button>
           </li>
 
@@ -201,9 +251,8 @@ export default function DetailsPanel() {
                 </p>
               </div>
             </div>
-            <button className="flex items-center gap-1 text-sm text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
+            <button className="flex w-7 justify-center rounded-full p-1 text-sm text-gray-900 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
               <ArrowDownTrayIcon className="h-4 w-4" />
-              Download
             </button>
           </li>
         </ul>
@@ -214,7 +263,7 @@ export default function DetailsPanel() {
         <button className="rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 dark:bg-white/10 dark:text-white dark:ring-white/20 dark:hover:bg-white/20">
           Cancel
         </button>
-        <button className="rounded-md bg-brand-royal px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-royal">
+        <button className="rounded-md bg-royal px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-royal">
           Save Changes
         </button>
       </div>
