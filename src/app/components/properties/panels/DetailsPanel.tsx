@@ -27,7 +27,7 @@ export default function DetailsPanel() {
     <div>
       <dl className="grid grid-cols-1 gap-x-8 sm:grid-cols-2">
         {/* Line one */}
-        <div className="px-4 py-6 sm:px-0">
+        <div className="px-4 py-3 sm:px-0">
           <dt className="text-sm/6 font-medium text-gray-900 dark:text-white">
             Property Name
           </dt>
@@ -36,7 +36,7 @@ export default function DetailsPanel() {
           </dd>
         </div>
 
-        <div className="px-4 py-6 sm:px-0">
+        <div className="px-4 py-3 sm:px-0">
           <dt className="text-sm/6 font-medium text-gray-900 dark:text-white">
             Property Type
           </dt>
@@ -50,7 +50,7 @@ export default function DetailsPanel() {
         </div>
 
         {/* Line two */}
-        <div className="px-4 py-6 sm:px-0">
+        <div className="px-4 py-3 sm:px-0">
           <dt className="text-sm/6 font-medium text-gray-900 dark:text-white">
             Street Address
           </dt>
@@ -62,7 +62,7 @@ export default function DetailsPanel() {
           </dd>
         </div>
 
-        <div className="px-4 py-6 sm:px-0">
+        <div className="px-4 py-3 sm:px-0">
           <dt className="text-sm/6 font-medium text-gray-900 dark:text-white">
             City
           </dt>
@@ -72,7 +72,7 @@ export default function DetailsPanel() {
         </div>
 
         {/* Line three */}
-        <div className="px-4 py-6 sm:px-0">
+        <div className="px-4 py-3 sm:px-0">
           <dt className="text-sm/6 font-medium text-gray-900 dark:text-white">
             State
           </dt>
@@ -85,7 +85,7 @@ export default function DetailsPanel() {
           </dd>
         </div>
 
-        <div className="px-4 py-6 sm:px-0">
+        <div className="px-4 py-3 sm:px-0">
           <dt className="text-sm/6 font-medium text-gray-900 dark:text-white">
             ZIP Code
           </dt>
@@ -94,76 +94,13 @@ export default function DetailsPanel() {
           </dd>
         </div>
 
-        {/* Line four - Year Built + Occupancy Rate */}
-        <div className="px-4 py-6 sm:px-0">
+        {/* Line four - Year Built (others removed) */}
+        <div className="px-4 py-3 sm:px-0">
           <dt className="text-sm/6 font-medium text-gray-900 dark:text-white">
             Year Built
           </dt>
           <dd className="mt-2 sm:mt-2">
             <FieldInput id="yearBuilt" type="number" placeholder="e.g., 1985" />
-          </dd>
-        </div>
-
-        <div className="px-4 py-6 sm:px-0">
-          <dt className="text-sm/6 font-medium text-gray-900 dark:text-white">
-            Occupancy Rate (%)
-          </dt>
-          <dd className="mt-2 sm:mt-2">
-            <FieldInput
-              id="occupancyRate"
-              type="number"
-              placeholder="e.g., 92"
-            />
-          </dd>
-        </div>
-
-        {/* Line five - Rentable & Total SqFt */}
-        <div className="px-4 py-6 sm:px-0">
-          <dt className="text-sm/6 font-medium text-gray-900 dark:text-white">
-            Rentable Square Footage
-          </dt>
-          <dd className="mt-2 sm:mt-2">
-            <FieldInput
-              id="rentableSqFt"
-              type="number"
-              placeholder="e.g., 120000"
-            />
-          </dd>
-        </div>
-
-        <div className="px-4 py-6 sm:px-0">
-          <dt className="text-sm/6 font-medium text-gray-900 dark:text-white">
-            Total Square Footage
-          </dt>
-          <dd className="mt-2 sm:mt-2">
-            <FieldInput
-              id="totalSqFt"
-              type="number"
-              placeholder="e.g., 150000"
-            />
-          </dd>
-        </div>
-
-        {/* Line six - Current & Next Month's Rent */}
-        <div className="px-4 py-6 sm:px-0">
-          <dt className="text-sm/6 font-medium text-gray-900 dark:text-white">
-            Current Rent
-          </dt>
-          <dd className="mt-2 sm:mt-2">
-            <FieldInput
-              id="currentRent"
-              type="number"
-              placeholder="e.g., 50000"
-            />
-          </dd>
-        </div>
-
-        <div className="px-4 py-6 sm:px-0">
-          <dt className="text-sm/6 font-medium text-gray-900 dark:text-white">
-            Next Month's Rent
-          </dt>
-          <dd className="mt-2 sm:mt-2">
-            <FieldInput id="nextRent" type="number" placeholder="e.g., 52000" />
           </dd>
         </div>
       </dl>
@@ -172,7 +109,7 @@ export default function DetailsPanel() {
       <div className="border-t border-gray-200 dark:border-gray-700 my-6"></div>
 
       {/* Property Description */}
-      <div className="px-4 py-6 sm:px-0">
+      <div className="px-4 py-3 sm:px-0">
         <dt className="text-sm/6 font-medium text-gray-900 dark:text-white">
           Property Description
         </dt>
@@ -197,7 +134,7 @@ export default function DetailsPanel() {
           </h3>
           <button
             type="button"
-            className="rounded-full bg-gray-900 p-1 text-white shadow-sm hover:bg-gray-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-900 dark:bg-gray-700 dark:hover:bg-gray-600"
+            className="rounded-full border border-sea p-1 text-sea hover:bg-sea/20 dark:border-sea dark:text-sea dark:hover:bg-sea/30"
           >
             <PlusIcon aria-hidden="true" className="size-5" />
           </button>
@@ -260,10 +197,16 @@ export default function DetailsPanel() {
 
       {/* Action Buttons */}
       <div className="mt-8 flex justify-end gap-3">
-        <button className="rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 dark:bg-white/10 dark:text-white dark:ring-white/20 dark:hover:bg-white/20">
+        <button
+          type="button"
+          className="rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 dark:bg-white/10 dark:text-white dark:ring-white/20 dark:hover:bg-white/20"
+        >
           Cancel
         </button>
-        <button className="rounded-md bg-royal px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-royal">
+        <button
+          type="button"
+          className="rounded-md bg-royal/10 px-3 py-2 text-sm font-semibold text-royal shadow-xs hover:bg-royal/20 dark:bg-royal/20 dark:text-royal dark:shadow-none dark:hover:bg-royal/30"
+        >
           Save Changes
         </button>
       </div>
