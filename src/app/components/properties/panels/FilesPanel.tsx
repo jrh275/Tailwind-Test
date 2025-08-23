@@ -4,7 +4,6 @@
 import {
   ArrowDownTrayIcon,
   DocumentIcon,
-  EyeIcon,
   FolderIcon,
   MagnifyingGlassIcon,
   PlusIcon,
@@ -190,37 +189,16 @@ export default function FilesPanel() {
     }
   };
 
-  const getCategoryStyle = (category: string) => {
-    switch (category) {
-      case "Legal":
-        return "bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-400";
-      case "Insurance":
-        return "bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400";
-      case "Permits":
-        return "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-400";
-      case "Financial":
-        return "bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400";
-      case "Photos":
-        return "bg-purple-100 text-purple-800 dark:bg-purple-900/20 dark:text-purple-400";
-      case "Contracts":
-        return "bg-indigo-100 text-indigo-800 dark:bg-indigo-900/20 dark:text-indigo-400";
-      case "Maintenance":
-        return "bg-orange-100 text-orange-800 dark:bg-orange-900/20 dark:text-orange-400";
-      case "Plans":
-        return "bg-pink-100 text-pink-800 dark:bg-pink-900/20 dark:text-pink-400";
-      default:
-        return "bg-gray-100 text-gray-800 dark:bg-gray-900/20 dark:text-gray-400";
-    }
-  };
+  // Grey chip style
+  const chipClass =
+    "inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-cloudy/50 text-midnight hover:bg-cloudy dark:bg-cloudy/20 dark:text-cloudy dark:hover:bg-cloudy/30";
+  const getCategoryStyle = (_category: string) => chipClass;
 
   const toggleFileSelection = (fileId: string) => {
-    const newSelected = new Set(selectedFiles);
-    if (newSelected.has(fileId)) {
-      newSelected.delete(fileId);
-    } else {
-      newSelected.add(fileId);
-    }
-    setSelectedFiles(newSelected);
+    const next = new Set(selectedFiles);
+    if (next.has(fileId)) next.delete(fileId);
+    else next.add(fileId);
+    setSelectedFiles(next);
   };
 
   const toggleSelectAll = () => {
@@ -231,7 +209,7 @@ export default function FilesPanel() {
     }
   };
 
-  // Get category counts for overview
+  // Category counts
   const categoryStats = files.reduce(
     (acc, file) => {
       acc[file.category] = (acc[file.category] || 0) + 1;
@@ -242,31 +220,9 @@ export default function FilesPanel() {
 
   return (
     <div className="space-y-6">
-      {/* Category Overview */}
-      <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
-        {Object.entries(categoryStats).map(([category, count]) => (
-          <div
-            key={category}
-            className="bg-white dark:bg-gray-800 p-4 rounded-lg border border-gray-200 dark:border-gray-700"
-          >
-            <div className="flex items-center">
-              <div className="flex-shrink-0">
-                <FolderIcon className="h-6 w-6 text-gray-400" />
-              </div>
-              <div className="ml-3">
-                <h3 className="text-sm font-medium text-gray-900 dark:text-white">
-                  {category}
-                </h3>
-                <p className="text-lg font-bold text-blue-600">{count}</p>
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
-
-      {/* Search and Actions */}
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <div className="flex-1 relative">
+      {/* Row 1: Search */}
+      <div className="w-full">
+        <div className="relative" role="search">
           <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
             <MagnifyingGlassIcon className="h-4 w-4 text-gray-400" />
           </div>
@@ -275,41 +231,61 @@ export default function FilesPanel() {
             placeholder="Search files by name, description, or uploader..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-blue-500 focus:border-blue-500 text-sm dark:bg-gray-800 dark:border-gray-600 dark:text-white"
+            className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-royal focus:border-royal text-sm dark:bg-gray-800 dark:border-gray-600 dark:text-white"
           />
         </div>
+      </div>
 
-        <div className="flex items-center gap-3">
-          <FieldSelect
-            id="categoryFilter"
-            options={categoryOptions}
-            value={categoryFilter}
-            onChange={(e) => setCategoryFilter(e.target.value)}
-          />
+      {/* Row 2: Filter + Upload */}
+      <div className="flex flex-wrap items-center gap-3 sm:gap-4">
+        <FieldSelect
+          id="categoryFilter"
+          options={categoryOptions}
+          value={categoryFilter}
+          onChange={(e) => setCategoryFilter(e.target.value)}
+        />
 
-          <button className="flex items-center gap-2 rounded-md bg-blue-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500">
+        <div className="ml-auto flex items-center gap-2">
+          <button className="flex items-center gap-2 rounded-md bg-royal/10 px-3 py-2 text-sm font-semibold text-royal shadow-xs hover:bg-royal/20 dark:bg-royal/20 dark:text-royal dark:shadow-none dark:hover:bg-royal/30">
             <PlusIcon className="h-4 w-4" />
             Upload File
           </button>
         </div>
       </div>
 
+      {/* Category Overview (row/grid style: folder icon + text) */}
+      <div className="flex flex-wrap gap-x-6 gap-y-3">
+        {Object.entries(categoryStats).map(([category, count]) => (
+          <div key={category} className="flex items-center gap-2 text-sm">
+            <FolderIcon className="h-4 w-4 text-gray-500" />
+            <span className="text-gray-900 dark:text-white">{category}</span>
+            <span className="text-gray-500 dark:text-gray-400">({count})</span>
+          </div>
+        ))}
+      </div>
+
       {/* Bulk Actions */}
       {selectedFiles.size > 0 && (
-        <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
+        <div className="rounded-lg border border-cloudy bg-cloudy/20 dark:border-cloudy/30 dark:bg-cloudy/10 p-3">
           <div className="flex items-center justify-between">
-            <span className="text-sm text-blue-900 dark:text-blue-100">
+            <span className="text-sm text-sea">
               {selectedFiles.size} file{selectedFiles.size !== 1 ? "s" : ""}{" "}
               selected
             </span>
             <div className="flex items-center gap-2">
-              <button className="flex items-center gap-1 rounded-md bg-white px-3 py-1.5 text-sm text-blue-900 hover:bg-blue-50">
+              <button
+                className="text-sea hover:text-sea"
+                aria-label="Download Selected"
+                title="Download"
+              >
                 <ArrowDownTrayIcon className="h-4 w-4" />
-                Download
               </button>
-              <button className="flex items-center gap-1 rounded-md bg-white px-3 py-1.5 text-sm text-red-600 hover:bg-red-50">
+              <button
+                className="text-sea hover:text-sea"
+                aria-label="Delete Selected"
+                title="Delete"
+              >
                 <TrashIcon className="h-4 w-4" />
-                Delete
               </button>
             </div>
           </div>
@@ -318,7 +294,6 @@ export default function FilesPanel() {
 
       {/* Files Table */}
       <div className="bg-white dark:bg-gray-800 shadow overflow-hidden sm:rounded-md">
-        {/* Header */}
         <div className="bg-gray-50 dark:bg-gray-700 px-4 py-3 border-b border-gray-200 dark:border-gray-600">
           <div className="flex items-center gap-4">
             <input
@@ -328,7 +303,7 @@ export default function FilesPanel() {
                 filteredFiles.length > 0
               }
               onChange={toggleSelectAll}
-              className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+              className="h-4 w-4 text-royal focus:ring-royal border-gray-300 rounded"
             />
             <span className="text-sm font-medium text-gray-900 dark:text-white">
               Files ({filteredFiles.length})
@@ -336,7 +311,6 @@ export default function FilesPanel() {
           </div>
         </div>
 
-        {/* Files List */}
         <ul className="divide-y divide-gray-200 dark:divide-gray-700">
           {filteredFiles.map((file) => (
             <li
@@ -350,7 +324,7 @@ export default function FilesPanel() {
                       type="checkbox"
                       checked={selectedFiles.has(file.id)}
                       onChange={() => toggleFileSelection(file.id)}
-                      className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                      className="h-4 w-4 text-royal focus:ring-royal border-gray-300 rounded"
                     />
 
                     <div className="flex items-center gap-3">
@@ -369,9 +343,7 @@ export default function FilesPanel() {
                   </div>
 
                   <div className="flex items-center gap-4">
-                    <span
-                      className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getCategoryStyle(file.category)}`}
-                    >
+                    <span className={getCategoryStyle(file.category)}>
                       {file.category}
                     </span>
 
@@ -393,18 +365,46 @@ export default function FilesPanel() {
                     <span>{file.uploadedDate}</span>
                   </div>
 
+                  {/* Icon-only actions */}
                   <div className="flex items-center gap-2">
-                    <button className="flex items-center gap-1 text-sm text-blue-600 hover:text-blue-800">
-                      <EyeIcon className="h-4 w-4" />
-                      Preview
+                    <button
+                      className="text-sea hover:text-sea"
+                      aria-label="Preview File"
+                      title="Preview"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth={1.5}
+                        stroke="currentColor"
+                        className="h-4 w-4"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z"
+                        />
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"
+                        />
+                      </svg>
                     </button>
-                    <button className="flex items-center gap-1 text-sm text-blue-600 hover:text-blue-800">
+                    <button
+                      className="text-sea hover:text-sea"
+                      aria-label="Download File"
+                      title="Download"
+                    >
                       <ArrowDownTrayIcon className="h-4 w-4" />
-                      Download
                     </button>
-                    <button className="flex items-center gap-1 text-sm text-red-600 hover:text-red-800">
+                    <button
+                      className="text-sea hover:text-sea"
+                      aria-label="Delete File"
+                      title="Delete"
+                    >
                       <TrashIcon className="h-4 w-4" />
-                      Delete
                     </button>
                   </div>
                 </div>
@@ -426,7 +426,7 @@ export default function FilesPanel() {
               : "Upload your first file to get started."}
           </p>
           <div className="mt-6">
-            <button className="inline-flex items-center gap-2 rounded-md bg-blue-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500">
+            <button className="inline-flex items-center gap-2 rounded-md bg-royal/10 px-3 py-2 text-sm font-semibold text-royal shadow-xs hover:bg-royal/20 dark:bg-royal/20 dark:text-royal dark:shadow-none dark:hover:bg-royal/30">
               <PlusIcon className="h-4 w-4" />
               Upload File
             </button>

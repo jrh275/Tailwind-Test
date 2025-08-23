@@ -37,12 +37,15 @@ const TABS: { key: TabKey; name: string }[] = [
   { key: "files", name: "Files" },
 ];
 
+// Property email (sample data)
+const propertyEmail = "4033nwyeonavenue@mail.cardinal.wtf";
+
 // Stats (example values)
 const stats = [
-  { name: "Total Square Feet", value: "20,000" },
-  { name: "Rentable Square Feet", value: "18,500" },
+  { name: "Total SF", value: "20,000" },
+  { name: "Rentable SF", value: "18,500" },
   { name: "Current Rent", value: "$25,000" },
-  { name: "Next Month's Rent", value: "$27,000" },
+  { name: "Next Rent", value: "$27,000" },
   { name: "Occupancy Rate", value: "92%" },
 ];
 
@@ -90,65 +93,50 @@ export default function PropertiesDetailsPage() {
 
   return (
     <div className="bg-base-white dark:bg-gray-800/50 -mt-12">
-      {/* Breadcrumb + inline right-aligned stats */}
+      {/* Breadcrumb */}
       <div className="px-4 sm:px-6 lg:px-8 py-3">
-        <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
-          {/* Breadcrumb (left) */}
-          <nav aria-label="Breadcrumb">
-            <ol role="list" className="flex items-center space-x-4">
-              <li>
-                <div>
+        <nav aria-label="Breadcrumb">
+          <ol role="list" className="flex items-center space-x-4">
+            <li>
+              <div>
+                <Link
+                  href="/"
+                  className="text-gray-400 hover:text-gray-500 dark:text-gray-500 dark:hover:text-gray-300"
+                >
+                  <HomeIcon aria-hidden="true" className="size-5 shrink-0" />
+                  <span className="sr-only">Home</span>
+                </Link>
+              </div>
+            </li>
+            {pages.map((page) => (
+              <li key={page.name}>
+                <div className="flex items-center">
+                  <ChevronRightIcon
+                    aria-hidden="true"
+                    className="size-5 shrink-0 text-gray-400 dark:text-gray-500"
+                  />
                   <Link
-                    href="/"
-                    className="text-gray-400 hover:text-gray-500 dark:text-gray-500 dark:hover:text-gray-300"
+                    href={page.href}
+                    aria-current={page.current ? "page" : undefined}
+                    className={classNames(
+                      "ml-4 text-sm font-medium",
+                      page.current
+                        ? "text-gray-900 dark:text-gray-100"
+                        : "text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+                    )}
                   >
-                    <HomeIcon aria-hidden="true" className="size-5 shrink-0" />
-                    <span className="sr-only">Home</span>
+                    {page.name}
                   </Link>
                 </div>
               </li>
-              {pages.map((page) => (
-                <li key={page.name}>
-                  <div className="flex items-center">
-                    <ChevronRightIcon
-                      aria-hidden="true"
-                      className="size-5 shrink-0 text-gray-400 dark:text-gray-500"
-                    />
-                    <Link
-                      href={page.href}
-                      aria-current={page.current ? "page" : undefined}
-                      className={classNames(
-                        "ml-4 text-sm font-medium",
-                        page.current
-                          ? "text-gray-900 dark:text-gray-100"
-                          : "text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
-                      )}
-                    >
-                      {page.name}
-                    </Link>
-                  </div>
-                </li>
-              ))}
-            </ol>
-          </nav>
-
-          {/* Stats (right, left-justified) */}
-          <dl className="sm:ml-6 flex items-center gap-x-6 gap-y-1 overflow-x-auto whitespace-nowrap py-1 text-xs sm:text-sm">
-            {stats.map((s) => (
-              <div key={s.name} className="flex flex-col text-left">
-                <dt className="text-gray-500 dark:text-gray-400">{s.name}</dt>
-                <dd className="font-semibold text-gray-900 dark:text-white">
-                  {s.value}
-                </dd>
-              </div>
             ))}
-          </dl>
-        </div>
+          </ol>
+        </nav>
       </div>
 
-      {/* Tabs */}
+      {/* Tabs (with divider) */}
       <div className="px-4 sm:px-6 lg:px-8">
-        <div className="pb-4">
+        <div className="pb-2">
           <div className="mt-3 sm:mt-4">
             {/* Mobile select */}
             <div className="grid grid-cols-1 sm:hidden">
@@ -192,7 +180,7 @@ export default function PropertiesDetailsPage() {
                         isActive
                           ? "border-b-2 border-brand-royal text-brand-royal"
                           : "text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-white",
-                        "px-1 pb-4 text-sm font-medium whitespace-nowrap focus:outline-none"
+                        "px-1 pb-4 text-sm font-medium whitespace-nowrap focus:outline-none -mb-px"
                       )}
                     >
                       {tab.name}
@@ -203,6 +191,65 @@ export default function PropertiesDetailsPage() {
             </div>
           </div>
         </div>
+
+        {/* Stats section */}
+        <section aria-labelledby="property-stats-heading" className="pt-3 pb-4">
+          <dl className="flex text-xs sm:text-sm divide-x divide-gray-200 dark:divide-white/10">
+            {/* 1–5) Existing stats */}
+            {stats.map((s) => (
+              <div
+                key={s.name}
+                className="flex-1 px-6 first:pl-0 last:pr-0 flex flex-col"
+              >
+                <dt className="text-gray-500 dark:text-gray-400">{s.name}</dt>
+                <dd className="font-semibold text-gray-900 dark:text-white">
+                  {s.value}
+                </dd>
+              </div>
+            ))}
+
+            {/* 6) Property email */}
+            <div className="flex-1 px-6 first:pl-0 last:pr-0 flex flex-col">
+              <dt className="text-gray-500 dark:text-gray-400">
+                Property email
+              </dt>
+              <dd className="font-semibold text-gray-900 dark:text-white">
+                <span className="inline-flex items-center gap-2">
+                  <span className="truncate">{propertyEmail}</span>
+                  <button
+                    type="button"
+                    onClick={async () => {
+                      try {
+                        await navigator.clipboard.writeText(propertyEmail);
+                      } catch {
+                        // Clipboard API might be unavailable
+                      }
+                    }}
+                    className="inline-flex items-center text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+                    aria-label="Copy property email to clipboard"
+                    title="Copy"
+                  >
+                    {/* Copy icon */}
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      strokeWidth={1.5}
+                      stroke="currentColor"
+                      className="size-5"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M15.75 17.25v3.375c0 .621-.504 1.125-1.125 1.125h-9.75a1.125 1.125 0 0 1-1.125-1.125V7.875c0-.621.504-1.125 1.125-1.125H6.75a9.06 9.06 0 0 1 1.5.124m7.5 10.376h3.375c.621 0 1.125-.504 1.125-1.125V11.25c0-4.46-3.243-8.161-7.5-8.876a9.06 9.06 0 0 0-1.5-.124H9.375c-.621 0-1.125.504-1.125 1.125v3.5m7.5 10.375H9.375a1.125 1.125 0 0 1-1.125-1.125v-9.25m12 6.625v-1.875a3.375 3.375 0 0 0-3.375-3.375h-1.5a1.125 1.125 0 0 1-1.125-1.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H9.75"
+                      />
+                    </svg>
+                  </button>
+                </span>
+              </dd>
+            </div>
+          </dl>
+        </section>
       </div>
 
       {/* Panels */}

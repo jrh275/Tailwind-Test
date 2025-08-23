@@ -163,52 +163,18 @@ export default function IssuesPanel() {
     [issues, searchQuery, statusFilter, priorityFilter, categoryFilter]
   );
 
-  // THEME-ALIGNED STATUS PILL COLORS
-  const getStatusStyle = (status: Issue["status"]) => {
-    switch (status) {
-      case "Open":
-        return "bg-royal/10 text-royal dark:bg-royal/20 dark:text-royal";
-      case "In Progress":
-        return "bg-rainy/20 text-sea dark:bg-rainy/30 dark:text-sea";
-      case "Resolved":
-        return "bg-spruce/10 text-spruce dark:bg-spruce/20 dark:text-spruce";
-      case "Closed":
-        return "bg-cloudy text-midnight dark:bg-cloudy/20 dark:text-cloudy";
-      default:
-        return "bg-cloudy text-midnight dark:bg-cloudy/20 dark:text-cloudy";
-    }
-  };
+  // --- Grey chips (status + priority) ---
+  const chipClass =
+    "inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-cloudy/50 text-midnight hover:bg-cloudy dark:bg-cloudy/20 dark:text-cloudy dark:hover:bg-cloudy/30";
 
-  const getStatusIcon = (status: Issue["status"]) => {
-    switch (status) {
-      case "Open":
-        return <ExclamationTriangleIcon className="h-4 w-4 text-royal" />;
-      case "In Progress":
-        return <ClockIcon className="h-4 w-4 text-sea" />;
-      case "Resolved":
-        return <CheckCircleIcon className="h-4 w-4 text-spruce" />;
-      case "Closed":
-        return <CheckCircleIcon className="h-4 w-4 text-cloudy" />;
-      default:
-        return <ExclamationTriangleIcon className="h-4 w-4 text-cloudy" />;
-    }
-  };
+  // Status style/icon unified to grey
+  const getStatusStyle = (_status: Issue["status"]) => chipClass;
+  const getStatusIcon = (_status: Issue["status"]) => (
+    <ExclamationTriangleIcon className="h-4 w-4 text-gray-400 dark:text-gray-500" />
+  );
 
-  // THEME-ALIGNED PRIORITY PILL COLORS
-  const getPriorityStyle = (priority: Issue["priority"]) => {
-    switch (priority) {
-      case "Urgent":
-        return "bg-cardinal/10 text-cardinal dark:bg-cardinal/20 dark:text-cardinal";
-      case "High":
-        return "bg-pumpkin/10 text-pumpkin dark:bg-pumpkin/20 dark:text-pumpkin";
-      case "Medium":
-        return "bg-rainy/20 text-sea dark:bg-rainy/30 dark:text-sea";
-      case "Low":
-        return "bg-spruce/10 text-spruce dark:bg-spruce/20 dark:text-spruce";
-      default:
-        return "bg-cloudy text-midnight dark:bg-cloudy/20 dark:text-cloudy";
-    }
-  };
+  // Priority chips also grey
+  const getPriorityStyle = (_priority: Issue["priority"]) => chipClass;
 
   const statusCounts = useMemo(
     () => ({
@@ -292,9 +258,9 @@ export default function IssuesPanel() {
         />
       </div>
 
-      {/* Search + Filters + Grid/List Toggle + New Issue */}
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <div className="flex-1 relative">
+      {/* Row 1: Full-width Search */}
+      <div className="w-full">
+        <div className="relative" role="search">
           <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
             <MagnifyingGlassIcon className="h-4 w-4 text-gray-400" />
           </div>
@@ -306,32 +272,35 @@ export default function IssuesPanel() {
             className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-royal focus:border-royal text-sm dark:bg-gray-800 dark:border-gray-600 dark:text-white"
           />
         </div>
+      </div>
 
-        <div className="flex items-center gap-3">
-          <FieldSelect
-            id="statusFilter"
-            options={statusOptions}
-            value={statusFilter}
-            onChange={(e) => setStatusFilter(e.target.value)}
-          />
-          <FieldSelect
-            id="priorityFilter"
-            options={priorityOptions}
-            value={priorityFilter}
-            onChange={(e) => setPriorityFilter(e.target.value)}
-          />
-          <FieldSelect
-            id="categoryFilter"
-            options={categoryOptions}
-            value={categoryFilter}
-            onChange={(e) => setCategoryFilter(e.target.value)}
-          />
+      {/* Row 2: Filters + View Toggle + New Issue */}
+      <div className="flex flex-wrap items-center gap-3 sm:gap-4">
+        <FieldSelect
+          id="statusFilter"
+          options={statusOptions}
+          value={statusFilter}
+          onChange={(e) => setStatusFilter(e.target.value)}
+        />
+        <FieldSelect
+          id="priorityFilter"
+          options={priorityOptions}
+          value={priorityFilter}
+          onChange={(e) => setPriorityFilter(e.target.value)}
+        />
+        <FieldSelect
+          id="categoryFilter"
+          options={categoryOptions}
+          value={categoryFilter}
+          onChange={(e) => setCategoryFilter(e.target.value)}
+        />
 
+        <div className="ml-auto flex items-center gap-2">
           {/* Grid/List Toggle */}
-          <div className="flex items-center gap-1 border border-gray-300 rounded-md">
+          <div className="flex items-center overflow-hidden rounded-md border border-gray-300 dark:border-gray-600">
             <button
               onClick={() => setViewMode("grid")}
-              className={`px-3 py-2 text-sm font-medium rounded-l-md ${
+              className={`px-3 py-2 text-sm font-medium ${
                 viewMode === "grid"
                   ? "bg-royal/10 text-royal hover:bg-royal/20 dark:bg-royal/20 dark:text-royal dark:hover:bg-royal/30"
                   : "bg-white text-gray-700 hover:bg-gray-50 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700"
@@ -341,7 +310,7 @@ export default function IssuesPanel() {
             </button>
             <button
               onClick={() => setViewMode("list")}
-              className={`px-3 py-2 text-sm font-medium rounded-r-md ${
+              className={`px-3 py-2 text-sm font-medium ${
                 viewMode === "list"
                   ? "bg-royal/10 text-royal hover:bg-royal/20 dark:bg-royal/20 dark:text-royal dark:hover:bg-royal/30"
                   : "bg-white text-gray-700 hover:bg-gray-50 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700"
@@ -351,7 +320,7 @@ export default function IssuesPanel() {
             </button>
           </div>
 
-          {/* New Issue */}
+          {/* New Issue (keep royal, primary action) */}
           <button className="flex items-center gap-2 rounded-md bg-royal/10 px-3 py-2 text-sm font-semibold text-royal shadow-xs hover:bg-royal/20 dark:bg-royal/20 dark:text-royal dark:shadow-none dark:hover:bg-royal/30">
             <PlusIcon className="h-4 w-4" />
             New Issue
@@ -374,19 +343,11 @@ export default function IssuesPanel() {
                     {issue.title}
                   </h3>
                   <div className="flex items-center gap-2">
-                    <span
-                      className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusStyle(
-                        issue.status
-                      )}`}
-                    >
+                    <span className={getStatusStyle(issue.status)}>
                       {getStatusIcon(issue.status)}
                       {issue.status}
                     </span>
-                    <span
-                      className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getPriorityStyle(
-                        issue.priority
-                      )}`}
-                    >
+                    <span className={getPriorityStyle(issue.priority)}>
                       {issue.priority}
                     </span>
                   </div>
@@ -438,9 +399,7 @@ export default function IssuesPanel() {
                 {(issue.unit || issue.estimatedCost) && (
                   <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-600 flex items-center justify-between">
                     {issue.unit ? (
-                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-cloudy text-midnight dark:bg-gray-700 dark:text-gray-200">
-                        Unit {issue.unit}
-                      </span>
+                      <span className={chipClass}>Unit {issue.unit}</span>
                     ) : (
                       <span />
                     )}
@@ -453,7 +412,7 @@ export default function IssuesPanel() {
                 )}
               </div>
 
-              {/* Actions: icons only, sea color */}
+              {/* Actions */}
               <div className="mt-4 flex items-center justify-end gap-4">
                 <button
                   className="text-sea hover:text-sea"
@@ -515,19 +474,11 @@ export default function IssuesPanel() {
                       <p className="text-lg font-medium text-sea truncate">
                         {issue.title}
                       </p>
-                      <span
-                        className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusStyle(
-                          issue.status
-                        )}`}
-                      >
+                      <span className={getStatusStyle(issue.status)}>
                         {getStatusIcon(issue.status)}
                         {issue.status}
                       </span>
-                      <span
-                        className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getPriorityStyle(
-                          issue.priority
-                        )}`}
-                      >
+                      <span className={getPriorityStyle(issue.priority)}>
                         {issue.priority}
                       </span>
                     </div>
@@ -539,9 +490,7 @@ export default function IssuesPanel() {
                         </p>
                       )}
                       {issue.unit && (
-                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-cloudy text-midnight dark:bg-gray-700 dark:text-gray-200">
-                          Unit {issue.unit}
-                        </span>
+                        <span className={chipClass}>Unit {issue.unit}</span>
                       )}
                     </div>
                   </div>
@@ -588,7 +537,7 @@ export default function IssuesPanel() {
                       </p>
                     </div>
 
-                    {/* Actions: icons only, sea color */}
+                    {/* Actions */}
                     <div className="mt-3 flex justify-end gap-4 sm:mt-0">
                       <button
                         className="text-sea hover:text-sea"

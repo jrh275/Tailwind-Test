@@ -2,12 +2,10 @@
 "use client";
 
 import {
-  CheckCircleIcon,
   HomeIcon,
   MagnifyingGlassIcon,
   PlusIcon,
   UserIcon,
-  XCircleIcon,
 } from "@heroicons/react/20/solid";
 import { useState } from "react";
 import { FieldSelect } from "../shared";
@@ -27,7 +25,7 @@ interface Unit {
     leaseEnd: string;
     phone: string;
   };
-  amenities: string[]; // kept in data model, not displayed
+  amenities: string[];
 }
 
 const sampleUnits: Unit[] = [
@@ -82,7 +80,7 @@ const sampleUnits: Unit[] = [
     type: "Warehouse",
     size: 18000,
     monthlyRent: 3800,
-    status: "Unavailable", // was "Maintenance"
+    status: "Unavailable",
     amenities: ["Parking", "Balcony", "Storage"],
   },
   {
@@ -151,45 +149,26 @@ export default function UnitsPanel() {
     return true;
   });
 
-  // THEME-ALIGNED STATUS PILL COLORS
-  const getStatusStyle = (status: Unit["status"]) => {
-    switch (status) {
-      case "Occupied":
-        return "bg-spruce/10 text-spruce dark:bg-spruce/20 dark:text-spruce";
-      case "Vacant":
-        return "bg-royal/10 text-royal dark:bg-royal/20 dark:text-royal";
-      case "Unavailable":
-        return "bg-cardinal/10 text-cardinal dark:bg-cardinal/20 dark:text-cardinal";
-      default:
-        return "bg-cloudy text-midnight dark:bg-cloudy/20 dark:text-cloudy";
-    }
+  // --- Grey chips (status pills) ---
+  const getStatusStyle = (_status: Unit["status"]) => {
+    // Using your theme tokens for grey: bg-cloudy / text-midnight in light; cloudier in dark.
+    return "bg-cloudy/50 text-midnight dark:bg-cloudy/20 dark:text-cloudy";
   };
 
-  // THEME-ALIGNED STATUS ICON COLORS
-  const getStatusIcon = (status: Unit["status"]) => {
-    switch (status) {
-      case "Occupied":
-        return <CheckCircleIcon className="h-4 w-4 text-spruce" />;
-      case "Vacant":
-        return <HomeIcon className="h-4 w-4 text-royal" />;
-      case "Unavailable":
-        return <XCircleIcon className="h-4 w-4 text-cardinal" />;
-      default:
-        return <HomeIcon className="h-4 w-4 text-cloudy" />;
-    }
+  // Icon is kept neutral; choose any — using HomeIcon for consistency.
+  const getStatusIcon = (_status: Unit["status"]) => {
+    return <HomeIcon className="h-4 w-4 text-gray-400 dark:text-gray-500" />;
   };
 
-  // Handler for the Past Leases chip (wire to router/modal as needed)
   const handlePastLeases = (unit: Unit) => {
-    // TODO: replace with your navigation or modal open
     console.log("Open Past Leases for Unit", unit.number, unit.id);
   };
 
   return (
     <div className="space-y-6">
-      {/* Search and Filters */}
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <div className="flex-1 relative">
+      {/* Row 1: Full-width Search */}
+      <div className="w-full">
+        <div className="relative" role="search">
           <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
             <MagnifyingGlassIcon className="h-4 w-4 text-gray-400" />
           </div>
@@ -201,27 +180,30 @@ export default function UnitsPanel() {
             className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-royal focus:border-royal text-sm dark:bg-gray-800 dark:border-gray-600 dark:text-white"
           />
         </div>
+      </div>
 
-        <div className="flex items-center gap-3">
-          <FieldSelect
-            id="statusFilter"
-            options={statusOptions}
-            value={statusFilter}
-            onChange={(e) => setStatusFilter(e.target.value)}
-          />
+      {/* Row 2: Filters + View Toggle + Add Button */}
+      <div className="flex flex-wrap items-center gap-3 sm:gap-4">
+        <FieldSelect
+          id="statusFilter"
+          options={statusOptions}
+          value={statusFilter}
+          onChange={(e) => setStatusFilter(e.target.value)}
+        />
 
-          <FieldSelect
-            id="typeFilter"
-            options={typeOptions}
-            value={typeFilter}
-            onChange={(e) => setTypeFilter(e.target.value)}
-          />
+        <FieldSelect
+          id="typeFilter"
+          options={typeOptions}
+          value={typeFilter}
+          onChange={(e) => setTypeFilter(e.target.value)}
+        />
 
-          {/* Grid/List Toggle (matches Add Unit) */}
-          <div className="flex items-center gap-1 border border-gray-300 rounded-md">
+        <div className="ml-auto flex items-center gap-2">
+          {/* Grid/List Toggle */}
+          <div className="flex items-center overflow-hidden rounded-md border border-gray-300 dark:border-gray-600">
             <button
               onClick={() => setViewMode("grid")}
-              className={`px-3 py-2 text-sm font-medium rounded-l-md ${
+              className={`px-3 py-2 text-sm font-medium ${
                 viewMode === "grid"
                   ? "bg-royal/10 text-royal hover:bg-royal/20 dark:bg-royal/20 dark:text-royal dark:hover:bg-royal/30"
                   : "bg-white text-gray-700 hover:bg-gray-50 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700"
@@ -231,7 +213,7 @@ export default function UnitsPanel() {
             </button>
             <button
               onClick={() => setViewMode("list")}
-              className={`px-3 py-2 text-sm font-medium rounded-r-md ${
+              className={`px-3 py-2 text-sm font-medium ${
                 viewMode === "list"
                   ? "bg-royal/10 text-royal hover:bg-royal/20 dark:bg-royal/20 dark:text-royal dark:hover:bg-royal/30"
                   : "bg-white text-gray-700 hover:bg-gray-50 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700"
@@ -241,7 +223,7 @@ export default function UnitsPanel() {
             </button>
           </div>
 
-          {/* Add Unit button (royal) */}
+          {/* Add Unit — leaving royal since it's a primary action */}
           <button className="flex items-center gap-2 rounded-md bg-royal/10 px-3 py-2 text-sm font-semibold text-royal shadow-xs hover:bg-royal/20 dark:bg-royal/20 dark:text-royal dark:shadow-none dark:hover:bg-royal/30">
             <PlusIcon className="h-4 w-4" />
             Add Unit
@@ -312,11 +294,11 @@ export default function UnitsPanel() {
                 )}
               </div>
 
-              {/* Bottom row: Past Leases chip (left) + Edit icon (right) */}
+              {/* Bottom row: Past Leases + Edit */}
               <div className="mt-4 flex items-center justify-between">
                 <button
                   onClick={() => handlePastLeases(unit)}
-                  className="inline-flex items-center rounded-full bg-royal/10 px-3 py-1 text-xs font-medium text-royal hover:bg-royal/20 dark:bg-royal/20 dark:text-royal dark:hover:bg-royal/30"
+                  className="inline-flex items-center rounded-full bg-cloudy/50 px-3 py-1 text-xs font-medium text-midnight hover:bg-cloudy dark:bg-cloudy/20 dark:text-cloudy dark:hover:bg-cloudy/30"
                   aria-label={`View past leases for Unit ${unit.number}`}
                 >
                   Past Leases
@@ -371,17 +353,17 @@ export default function UnitsPanel() {
                         ${unit.monthlyRent.toLocaleString()}/mo
                       </p>
 
-                      {/* Past Leases chip in list row */}
+                      {/* Past Leases chip */}
                       <button
                         onClick={() => handlePastLeases(unit)}
-                        className="inline-flex items-center rounded-full bg-royal/10 px-3 py-1 text-xs font-medium text-royal hover:bg-royal/20 dark:bg-royal/20 dark:text-royal dark:hover:bg-royal/30"
+                        className="inline-flex items-center rounded-full bg-cloudy/50 px-3 py-1 text-xs font-medium text-midnight hover:bg-cloudy dark:bg-cloudy/20 dark:text-cloudy dark:hover:bg-cloudy/30"
                         aria-label={`View past leases for Unit ${unit.number}`}
                       >
                         Past Leases
                       </button>
 
                       <button
-                        className="text-sea hover:sea"
+                        className="text-sea hover:text-sea"
                         aria-label={`Edit Unit ${unit.number}`}
                       >
                         <svg
