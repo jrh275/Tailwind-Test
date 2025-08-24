@@ -2,8 +2,6 @@
 "use client";
 
 import {
-  CheckCircleIcon,
-  ClockIcon,
   ExclamationTriangleIcon,
   MagnifyingGlassIcon,
   PlusIcon,
@@ -12,6 +10,7 @@ import {
 } from "@heroicons/react/20/solid";
 import { useMemo, useState } from "react";
 import { FieldSelect } from "../shared";
+import CreateIssueModal from "./CreateIssueModal";
 
 interface Issue {
   id: string;
@@ -103,12 +102,13 @@ const sampleIssues: Issue[] = [
 ];
 
 export default function IssuesPanel() {
-  const [issues] = useState<Issue[]>(sampleIssues);
-  const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
+  const [issues, setIssues] = useState<Issue[]>(sampleIssues);
+  const [viewMode, setViewMode] = useState<"grid" | "list">("list");
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
   const [priorityFilter, setPriorityFilter] = useState("all");
   const [categoryFilter, setCategoryFilter] = useState("all");
+  const [createOpen, setCreateOpen] = useState(false);
 
   const statusOptions = [
     { label: "All Statuses", value: "all" },
@@ -167,97 +167,25 @@ export default function IssuesPanel() {
   const chipClass =
     "inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-cloudy/50 text-midnight hover:bg-cloudy dark:bg-cloudy/20 dark:text-cloudy dark:hover:bg-cloudy/30";
 
-  // Status style/icon unified to grey
   const getStatusStyle = (_status: Issue["status"]) => chipClass;
   const getStatusIcon = (_status: Issue["status"]) => (
     <ExclamationTriangleIcon className="h-4 w-4 text-gray-400 dark:text-gray-500" />
   );
-
-  // Priority chips also grey
   const getPriorityStyle = (_priority: Issue["priority"]) => chipClass;
 
-  const statusCounts = useMemo(
-    () => ({
-      open: issues.filter((i) => i.status === "Open").length,
-      inProgress: issues.filter((i) => i.status === "In Progress").length,
-      resolved: issues.filter((i) => i.status === "Resolved").length,
-      closed: issues.filter((i) => i.status === "Closed").length,
-    }),
-    [issues]
-  );
-
-  const totalEstimatedCost = useMemo(
-    () =>
-      issues
-        .filter((i) => i.estimatedCost && i.status !== "Closed")
-        .reduce((sum, i) => sum + (i.estimatedCost || 0), 0),
-    [issues]
-  );
-
-  const OverviewCard = ({
-    icon,
-    label,
-    value,
-    accentClass,
-  }: {
-    icon: React.ReactNode;
-    label: string;
-    value: number | string;
-    accentClass: string;
-  }) => (
-    <div className="bg-white dark:bg-gray-800 p-6 rounded-lg border border-gray-200 dark:border-gray-700">
-      <div className="flex items-center">
-        <div className="flex-shrink-0">{icon}</div>
-        <div className="ml-4">
-          <h3 className="text-sm font-medium text-gray-900 dark:text-white">
-            {label}
-          </h3>
-          <p className={`text-2xl font-bold ${accentClass}`}>{value}</p>
-        </div>
-      </div>
-    </div>
-  );
+  function handleCreate(newIssue: Omit<Issue, "id">) {
+    setIssues((prev) => {
+      const nextId =
+        String(
+          prev.reduce((max, i) => Math.max(max, Number(i.id) || 0), 0) + 1
+        ) || String(Date.now());
+      return [{ id: nextId, ...newIssue }, ...prev];
+    });
+    setCreateOpen(false);
+  }
 
   return (
     <div className="space-y-6">
-      {/* Overview Cards */}
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-5">
-        <OverviewCard
-          icon={<ExclamationTriangleIcon className="h-8 w-8 text-royal" />}
-          label="Open"
-          value={statusCounts.open}
-          accentClass="text-royal"
-        />
-        <OverviewCard
-          icon={<ClockIcon className="h-8 w-8 text-sea" />}
-          label="In Progress"
-          value={statusCounts.inProgress}
-          accentClass="text-sea"
-        />
-        <OverviewCard
-          icon={<CheckCircleIcon className="h-8 w-8 text-spruce" />}
-          label="Resolved"
-          value={statusCounts.resolved}
-          accentClass="text-spruce"
-        />
-        <OverviewCard
-          icon={<CheckCircleIcon className="h-8 w-8 text-cloudy" />}
-          label="Closed"
-          value={statusCounts.closed}
-          accentClass="text-cloudy"
-        />
-        <OverviewCard
-          icon={
-            <div className="h-8 w-8 font-bold text-xl text-spruce leading-8">
-              $
-            </div>
-          }
-          label="Est. Cost"
-          value={`$${totalEstimatedCost.toLocaleString()}`}
-          accentClass="text-spruce"
-        />
-      </div>
-
       {/* Row 1: Full-width Search */}
       <div className="w-full">
         <div className="relative" role="search">
@@ -299,16 +227,6 @@ export default function IssuesPanel() {
           {/* Grid/List Toggle */}
           <div className="flex items-center overflow-hidden rounded-md border border-gray-300 dark:border-gray-600">
             <button
-              onClick={() => setViewMode("grid")}
-              className={`px-3 py-2 text-sm font-medium ${
-                viewMode === "grid"
-                  ? "bg-royal/10 text-royal hover:bg-royal/20 dark:bg-royal/20 dark:text-royal dark:hover:bg-royal/30"
-                  : "bg-white text-gray-700 hover:bg-gray-50 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700"
-              }`}
-            >
-              Grid
-            </button>
-            <button
               onClick={() => setViewMode("list")}
               className={`px-3 py-2 text-sm font-medium ${
                 viewMode === "list"
@@ -318,10 +236,23 @@ export default function IssuesPanel() {
             >
               List
             </button>
+            <button
+              onClick={() => setViewMode("grid")}
+              className={`px-3 py-2 text-sm font-medium ${
+                viewMode === "grid"
+                  ? "bg-royal/10 text-royal hover:bg-royal/20 dark:bg-royal/20 dark:text-royal dark:hover:bg-royal/30"
+                  : "bg-white text-gray-700 hover:bg-gray-50 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700"
+              }`}
+            >
+              Grid
+            </button>
           </div>
 
-          {/* New Issue (keep royal, primary action) */}
-          <button className="flex items-center gap-2 rounded-md bg-royal/10 px-3 py-2 text-sm font-semibold text-royal shadow-xs hover:bg-royal/20 dark:bg-royal/20 dark:text-royal dark:shadow-none dark:hover:bg-royal/30">
+          {/* New Issue */}
+          <button
+            onClick={() => setCreateOpen(true)}
+            className="flex items-center gap-2 rounded-md bg-royal/10 px-3 py-2 text-sm font-semibold text-royal shadow-xs hover:bg-royal/20 dark:bg-royal/20 dark:text-royal dark:shadow-none dark:hover:bg-royal/30"
+          >
             <PlusIcon className="h-4 w-4" />
             New Issue
           </button>
@@ -418,6 +349,7 @@ export default function IssuesPanel() {
                   className="text-sea hover:text-sea"
                   aria-label="View Details"
                 >
+                  {/* eye */}
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
@@ -443,6 +375,7 @@ export default function IssuesPanel() {
                   className="text-sea hover:text-sea"
                   aria-label="Edit Issue"
                 >
+                  {/* pencil */}
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
@@ -543,6 +476,7 @@ export default function IssuesPanel() {
                         className="text-sea hover:text-sea"
                         aria-label="View Details"
                       >
+                        {/* eye */}
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
                           fill="none"
@@ -568,6 +502,7 @@ export default function IssuesPanel() {
                         className="text-sea hover:text-sea"
                         aria-label="Edit Issue"
                       >
+                        {/* pencil */}
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
                           fill="none"
@@ -602,6 +537,18 @@ export default function IssuesPanel() {
             Try adjusting your search or filters.
           </p>
         </div>
+      )}
+
+      {/* Create Issue Modal */}
+      {createOpen && (
+        <CreateIssueModal
+          open={createOpen}
+          onClose={() => setCreateOpen(false)}
+          onCreate={handleCreate}
+          categoryOptions={categoryOptions.filter((o) => o.value !== "all")}
+          priorityOptions={priorityOptions.filter((o) => o.value !== "all")}
+          statusOptions={statusOptions.filter((o) => o.value !== "all")}
+        />
       )}
     </div>
   );

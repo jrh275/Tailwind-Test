@@ -114,7 +114,8 @@ const sampleUnits: Unit[] = [
 
 export default function UnitsPanel() {
   const [units] = useState<Unit[]>(sampleUnits);
-  const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
+  // Default to LIST view
+  const [viewMode, setViewMode] = useState<"grid" | "list">("list");
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
   const [typeFilter, setTypeFilter] = useState("all");
@@ -136,13 +137,10 @@ export default function UnitsPanel() {
   const filteredUnits = units.filter((unit) => {
     if (searchQuery) {
       const query = searchQuery.toLowerCase();
-      if (
-        !unit.number.toLowerCase().includes(query) &&
-        !unit.tenant?.name.toLowerCase().includes(query) &&
-        !unit.tenant?.company.toLowerCase().includes(query)
-      ) {
-        return false;
-      }
+      const numberMatch = unit.number.toLowerCase().includes(query);
+      const nameMatch = unit.tenant?.name?.toLowerCase().includes(query);
+      const companyMatch = unit.tenant?.company?.toLowerCase().includes(query);
+      if (!numberMatch && !nameMatch && !companyMatch) return false;
     }
     if (statusFilter !== "all" && unit.status !== statusFilter) return false;
     if (typeFilter !== "all" && unit.type !== typeFilter) return false;
@@ -150,15 +148,12 @@ export default function UnitsPanel() {
   });
 
   // --- Grey chips (status pills) ---
-  const getStatusStyle = (_status: Unit["status"]) => {
-    // Using your theme tokens for grey: bg-cloudy / text-midnight in light; cloudier in dark.
-    return "bg-cloudy/50 text-midnight dark:bg-cloudy/20 dark:text-cloudy";
-  };
+  const getStatusStyle = (_status: Unit["status"]) =>
+    "bg-cloudy/50 text-midnight dark:bg-cloudy/20 dark:text-cloudy";
 
-  // Icon is kept neutral; choose any — using HomeIcon for consistency.
-  const getStatusIcon = (_status: Unit["status"]) => {
-    return <HomeIcon className="h-4 w-4 text-gray-400 dark:text-gray-500" />;
-  };
+  const getStatusIcon = (_status: Unit["status"]) => (
+    <HomeIcon className="h-4 w-4 text-gray-400 dark:text-gray-500" />
+  );
 
   const handlePastLeases = (unit: Unit) => {
     console.log("Open Past Leases for Unit", unit.number, unit.id);
@@ -199,18 +194,8 @@ export default function UnitsPanel() {
         />
 
         <div className="ml-auto flex items-center gap-2">
-          {/* Grid/List Toggle */}
+          {/* Toggle: List first, then Grid */}
           <div className="flex items-center overflow-hidden rounded-md border border-gray-300 dark:border-gray-600">
-            <button
-              onClick={() => setViewMode("grid")}
-              className={`px-3 py-2 text-sm font-medium ${
-                viewMode === "grid"
-                  ? "bg-royal/10 text-royal hover:bg-royal/20 dark:bg-royal/20 dark:text-royal dark:hover:bg-royal/30"
-                  : "bg-white text-gray-700 hover:bg-gray-50 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700"
-              }`}
-            >
-              Grid
-            </button>
             <button
               onClick={() => setViewMode("list")}
               className={`px-3 py-2 text-sm font-medium ${
@@ -221,9 +206,19 @@ export default function UnitsPanel() {
             >
               List
             </button>
+            <button
+              onClick={() => setViewMode("grid")}
+              className={`px-3 py-2 text-sm font-medium ${
+                viewMode === "grid"
+                  ? "bg-royal/10 text-royal hover:bg-royal/20 dark:bg-royal/20 dark:text-royal dark:hover:bg-royal/30"
+                  : "bg-white text-gray-700 hover:bg-gray-50 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700"
+              }`}
+            >
+              Grid
+            </button>
           </div>
 
-          {/* Add Unit — leaving royal since it's a primary action */}
+          {/* Add Unit */}
           <button className="flex items-center gap-2 rounded-md bg-royal/10 px-3 py-2 text-sm font-semibold text-royal shadow-xs hover:bg-royal/20 dark:bg-royal/20 dark:text-royal dark:shadow-none dark:hover:bg-royal/30">
             <PlusIcon className="h-4 w-4" />
             Add Unit

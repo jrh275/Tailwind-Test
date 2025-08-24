@@ -58,6 +58,15 @@ export default function AppLayoutWrapper({
 }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
+  // Dark at the top → lighter at the bottom (midnight weighted in the top ~65%)
+  const sidebarWaveStyle: React.CSSProperties = {
+    backgroundImage:
+      "linear-gradient(to bottom, var(--color-midnight) 0%, var(--color-midnight) 65%, var(--color-cloudy) 100%), url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cpath d='M0 48 Q 16 32 32 48 T 64 48 M0 32 Q 16 16 32 32 T 64 32 M0 16 Q 16 0 32 16 T 64 16' fill='none' stroke='%23FFFFFF' stroke-opacity='0.07' stroke-width='2'/%3E%3C/svg%3E\")",
+    backgroundRepeat: "no-repeat, repeat",
+    backgroundSize: "auto, 64px 64px",
+    backgroundPosition: "0 0, 0 0",
+  };
+
   return (
     <div className="min-h-dvh bg-base-white text-typography-midnight">
       {/* Mobile sidebar */}
@@ -88,10 +97,23 @@ export default function AppLayoutWrapper({
               </div>
             </TransitionChild>
 
-            {/* Sidebar (mobile) */}
-            <div className="relative flex grow flex-col gap-y-5 overflow-y-auto bg-[var(--color-midnight)] px-6 pb-4 text-white">
-              <div className="relative flex h-16 shrink-0 items-center">
-                <div className="h-8 w-8 rounded-md bg-brand-royal" />
+            {/* Sidebar (mobile) - gradient + wave */}
+            <div
+              className="relative flex grow flex-col gap-y-5 overflow-y-auto px-6 pb-4 text-white"
+              style={sidebarWaveStyle}
+            >
+              {/* Sidebar header (mobile) */}
+              <div className="relative flex h-16 shrink-0 items-center gap-3">
+                <img
+                  alt="Cardinal"
+                  src="/cardinal-logo.png"
+                  className="h-8 w-auto opacity-95" // was h-6 → larger
+                  loading="eager"
+                  decoding="async"
+                />
+                <span className="text-white font-regular tracking-wider uppercase">
+                  CARDINAL
+                </span>
               </div>
 
               <nav className="relative flex flex-1 flex-col">
@@ -135,10 +157,24 @@ export default function AppLayoutWrapper({
       </Dialog>
 
       {/* Desktop sidebar */}
-      <div className="hidden lg:fixed lg:inset-y-0 lg:z-50 lg:flex lg:w-72 lg:flex-col bg-[var(--color-midnight)] text-white">
-        <div className="flex grow flex-col gap-y-5 overflow-y-auto border-r border-base-cloudy bg-[var(--color-midnight)] px-6 pb-4">
-          <div className="flex h-16 shrink-0 items-center">
-            <div className="h-8 w-8 rounded-md bg-brand-royal" />
+      <div
+        className="hidden lg:fixed lg:inset-y-0 lg:z-50 lg:flex lg:w-72 lg:flex-col text-white"
+        style={sidebarWaveStyle}
+      >
+        {/* Keep inner container transparent so the background shows through */}
+        <div className="flex grow flex-col gap-y-5 overflow-y-auto border-r border-base-cloudy px-6 pb-4">
+          {/* Sidebar header (desktop) */}
+          <div className="relative flex h-16 shrink-0 items-center gap-3">
+            <img
+              alt="Cardinal"
+              src="/cardinal-logo.png"
+              className="h-8 w-auto opacity-95" // was h-6 → larger
+              loading="eager"
+              decoding="async"
+            />
+            <span className="text-white font-regular tracking-wider uppercase">
+              CARDINAL
+            </span>
           </div>
 
           <nav className="flex flex-1 flex-col">
@@ -248,7 +284,7 @@ export default function AppLayoutWrapper({
                 </MenuButton>
                 <MenuItems
                   transition
-                  className="absolute right-0 z-10 mt-2.5 w-36 origin-top-right rounded-md bg-base-white py-2 shadow-lg outline-1 outline-base-midnight/5 transition data-closed:scale-95 data-closed:transform data-closed:opacity-0 data-enter:duration-100 data-enter:ease-out data-leave:duration-75 data-leave:ease-in"
+                  className="absolute right-0 z-10 mt-2.5 w-36 origin-top-right rounded-md bg-base-white py-2 shadow-lg border border-foggy transition data-closed:scale-95 data-closed:transform data-closed:opacity-0 data-enter:duration-100 data-enter:ease-out data-leave:duration-75 data-leave:ease-in"
                 >
                   {userNavigation.map((item) => (
                     <MenuItem key={item.name}>

@@ -3,7 +3,6 @@
 
 import {
   ArrowDownTrayIcon,
-  DocumentIcon,
   FolderIcon,
   MagnifyingGlassIcon,
   PlusIcon,
@@ -22,6 +21,49 @@ interface FileItem {
   uploadedDate: string;
   description?: string;
   url?: string;
+}
+
+/** Custom Icons (from user) */
+function DocumentOutlineIcon(props: React.SVGProps<SVGSVGElement>) {
+  const { className, ...rest } = props;
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 24 24"
+      strokeWidth={1.5}
+      stroke="currentColor"
+      className={className ?? "h-6 w-6"}
+      {...rest}
+    >
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z"
+      />
+    </svg>
+  );
+}
+
+function PhotoOutlineIcon(props: React.SVGProps<SVGSVGElement>) {
+  const { className, ...rest } = props;
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 24 24"
+      strokeWidth={1.5}
+      stroke="currentColor"
+      className={className ?? "h-6 w-6"}
+      {...rest}
+    >
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="m2.25 15.75 5.159-5.159a2.25 2.25 0 0 1 3.182 0l5.159 5.159m-1.5-1.5 1.409-1.409a2.25 2.25 0 0 1 3.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 0 0 1.5-1.5V6a1.5 1.5 0 0 0-1.5-1.5H3.75A1.5 1.5 0 0 0 2.25 6v12a1.5 1.5 0 0 0 1.5 1.5Zm10.5-11.25h.008v.008h-.008V8.25Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z"
+      />
+    </svg>
+  );
 }
 
 const sampleFiles: FileItem[] = [
@@ -161,35 +203,7 @@ export default function FilesPanel() {
     return true;
   });
 
-  const formatFileSize = (bytes: number) => {
-    if (bytes === 0) return "0 Bytes";
-    const k = 1024;
-    const sizes = ["Bytes", "KB", "MB", "GB"];
-    const i = Math.floor(Math.log(bytes) / Math.log(k));
-    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i];
-  };
-
-  const getFileIcon = (type: string) => {
-    switch (type.toLowerCase()) {
-      case "pdf":
-        return <DocumentIcon className="h-8 w-8 text-red-500" />;
-      case "excel":
-      case "xlsx":
-        return <DocumentIcon className="h-8 w-8 text-green-500" />;
-      case "word":
-      case "docx":
-        return <DocumentIcon className="h-8 w-8 text-blue-500" />;
-      case "zip":
-        return <FolderIcon className="h-8 w-8 text-yellow-500" />;
-      case "cad":
-      case "dwg":
-        return <DocumentIcon className="h-8 w-8 text-purple-500" />;
-      default:
-        return <DocumentIcon className="h-8 w-8 text-gray-500" />;
-    }
-  };
-
-  // Grey chip style
+  /** Neutral grey chip */
   const chipClass =
     "inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-cloudy/50 text-midnight hover:bg-cloudy dark:bg-cloudy/20 dark:text-cloudy dark:hover:bg-cloudy/30";
   const getCategoryStyle = (_category: string) => chipClass;
@@ -217,6 +231,37 @@ export default function FilesPanel() {
     },
     {} as Record<string, number>
   );
+
+  /** Decide which icon to show for a file */
+  const getFileIcon = (file: FileItem) => {
+    const type = file.type?.toLowerCase() ?? "";
+    const name = file.name?.toLowerCase() ?? "";
+
+    const photoExts = [
+      "jpg",
+      "jpeg",
+      "png",
+      "gif",
+      "webp",
+      "tif",
+      "tiff",
+      "svg",
+      "heic",
+    ];
+
+    const isPhotoCategory = file.category === "Photos";
+    const isPhotoByExt = photoExts.some((ext) => name.endsWith("." + ext));
+    if (isPhotoCategory || isPhotoByExt) {
+      return <PhotoOutlineIcon className="h-6 w-6 text-sea" />;
+    }
+
+    if (type === "zip") {
+      return <FolderIcon className="h-6 w-6 text-sea" />;
+    }
+
+    // Default to document icon for everything else (PDF, Word, Excel, CAD, etc.)
+    return <DocumentOutlineIcon className="h-6 w-6 text-sea" />;
+  };
 
   return (
     <div className="space-y-6">
@@ -253,7 +298,7 @@ export default function FilesPanel() {
         </div>
       </div>
 
-      {/* Category Overview (row/grid style: folder icon + text) */}
+      {/* Category Overview */}
       <div className="flex flex-wrap gap-x-6 gap-y-3">
         {Object.entries(categoryStats).map(([category, count]) => (
           <div key={category} className="flex items-center gap-2 text-sm">
@@ -328,7 +373,7 @@ export default function FilesPanel() {
                     />
 
                     <div className="flex items-center gap-3">
-                      {getFileIcon(file.type)}
+                      {getFileIcon(file)}
                       <div>
                         <p className="text-sm font-medium text-gray-900 dark:text-white">
                           {file.name}
@@ -348,9 +393,7 @@ export default function FilesPanel() {
                     </span>
 
                     <div className="text-right">
-                      <p className="text-sm text-gray-900 dark:text-white">
-                        {formatFileSize(file.size)}
-                      </p>
+                      {/* Removed file size per request */}
                       <p className="text-xs text-gray-500 dark:text-gray-400">
                         {file.type}
                       </p>
@@ -416,7 +459,7 @@ export default function FilesPanel() {
 
       {filteredFiles.length === 0 && (
         <div className="text-center py-12">
-          <DocumentIcon className="mx-auto h-12 w-12 text-gray-400" />
+          <DocumentOutlineIcon className="mx-auto h-12 w-12 text-gray-400" />
           <h3 className="mt-2 text-sm font-medium text-gray-900 dark:text-white">
             No files found
           </h3>
