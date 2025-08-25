@@ -92,7 +92,7 @@ export default function PropertiesDetailsPage() {
   );
 
   return (
-    <div className="bg-base-white dark:bg-gray-800/50 -mt-12">
+    <div className="bg-base-white dark:bg-gray-800/50 mt-0 sm:mt-2">
       {/* Breadcrumb */}
       <div className="px-4 sm:px-6 lg:px-8 py-3">
         <nav aria-label="Breadcrumb">

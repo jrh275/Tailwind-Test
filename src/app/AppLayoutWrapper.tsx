@@ -302,7 +302,7 @@ export default function AppLayoutWrapper({
           </div>
         </div>
 
-        <main className="pt-22 py-6">
+        <main className="mt-4 pb-6">
           <div className="px-4 sm:px-6 lg:px-8">{children}</div>
         </main>
       </div>

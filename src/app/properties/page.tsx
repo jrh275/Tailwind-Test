@@ -7,7 +7,7 @@ export default function PropertiesPage() {
   const handleAdd = () => console.log("Add new property");
 
   return (
-    <div className="p-6 space-y-8">
+    <div className="px-6 pt-0 pb-6 space-y-8">
       {/* Page Header */}
       <div>
         <h2 className="text-[28px] font-semibold tracking-tight text-typography-midnight">
