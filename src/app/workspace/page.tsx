@@ -1,11 +1,6 @@
+// src/app/workspace/page.tsx
 "use client";
 
-import {
-  Dialog,
-  DialogBackdrop,
-  DialogPanel,
-  TransitionChild,
-} from "@headlessui/react";
 import {
   CalendarIcon,
   ChevronLeftIcon,
@@ -14,346 +9,28 @@ import {
   MapPinIcon,
 } from "@heroicons/react/20/solid";
 import {
-  BuildingOfficeIcon,
-  ChartPieIcon,
-  ClipboardIcon,
   ClockIcon,
-  DocumentDuplicateIcon,
   DocumentTextIcon,
   EllipsisHorizontalIcon as EllipsisOutline,
-  EnvelopeIcon,
   FolderIcon,
   StarIcon,
-  XMarkIcon,
 } from "@heroicons/react/24/outline";
 import { StarIcon as StarIconSolid } from "@heroicons/react/24/solid";
-import React, { useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 
-export type CreateNewKind = "property" | "lease" | "issue" | "report" | "email";
+// Import the separated components
+import AddIssueToCalendarModal from "../components/workspace/modals/AddIssueToCalendarModal";
+import CreateNewModal, {
+  CreateNewKind,
+} from "../components/workspace/modals/CreateNewModal";
+import {
+  CalendarDay,
+  Issue,
+  Meeting,
+  RecentFile,
+} from "../components/workspace/types";
 
-function AddIssueToCalendarModal({
-  open,
-  onClose,
-  issue,
-}: {
-  open: boolean;
-  onClose: () => void;
-  issue: Issue | null;
-}) {
-  const [selectedDate, setSelectedDate] = useState("");
-  const [selectedTime, setSelectedTime] = useState("09:00");
-  const [notes, setNotes] = useState("");
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (issue && selectedDate && selectedTime) {
-      // Here you would add the logic to add to calendar
-      console.log("Adding to calendar:", {
-        issue: issue.title,
-        date: selectedDate,
-        time: selectedTime,
-        notes,
-      });
-      onClose();
-    }
-  };
-
-  if (!issue) return null;
-
-  return (
-    <Dialog open={open} onClose={onClose} className="relative z-50">
-      <DialogBackdrop
-        transition
-        className="fixed inset-0 bg-gray-900/50 transition-opacity duration-200 ease-out data-[closed]:opacity-0"
-      />
-
-      <div className="fixed inset-0 overflow-y-auto p-4 sm:p-6 md:p-8">
-        <div className="mx-auto max-w-md">
-          <DialogPanel
-            transition
-            className="relative transform overflow-hidden rounded-2xl border border-gray-200 bg-white p-6 shadow-xl transition-all data-[closed]:scale-95 data-[closed]:opacity-0"
-          >
-            <div className="flex items-start justify-between">
-              <div>
-                <h2 className="text-lg font-semibold text-gray-900">
-                  Add Issue to Calendar
-                </h2>
-                <p className="mt-1 text-sm text-gray-500">
-                  Schedule time to address this issue
-                </p>
-              </div>
-              <button
-                onClick={onClose}
-                className="-m-2 rounded-full p-2 text-gray-400 hover:text-gray-600"
-                aria-label="Close"
-              >
-                <XMarkIcon className="h-6 w-6" />
-              </button>
-            </div>
-
-            <form onSubmit={handleSubmit} className="mt-5">
-              <div className="space-y-4">
-                <div className="rounded-lg border border-gray-200 bg-gray-50 p-3">
-                  <h3 className="font-medium text-gray-900">{issue.title}</h3>
-                  <p className="mt-1 text-sm text-gray-500">
-                    {issue.property} • Priority: {issue.priority} • Status:{" "}
-                    {issue.status}
-                    {issue.unit && ` • Unit ${issue.unit}`}
-                  </p>
-                </div>
-
-                <div>
-                  <label
-                    htmlFor="date"
-                    className="block text-sm font-medium text-gray-700"
-                  >
-                    Date
-                  </label>
-                  <input
-                    type="date"
-                    id="date"
-                    value={selectedDate}
-                    onChange={(e) => setSelectedDate(e.target.value)}
-                    className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-sea focus:outline-none focus:ring-1 focus:ring-sea"
-                    required
-                  />
-                </div>
-
-                <div>
-                  <label
-                    htmlFor="time"
-                    className="block text-sm font-medium text-gray-700"
-                  >
-                    Time
-                  </label>
-                  <input
-                    type="time"
-                    id="time"
-                    value={selectedTime}
-                    onChange={(e) => setSelectedTime(e.target.value)}
-                    className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-sea focus:outline-none focus:ring-1 focus:ring-sea"
-                  />
-                </div>
-
-                <div>
-                  <label
-                    htmlFor="notes"
-                    className="block text-sm font-medium text-gray-700"
-                  >
-                    Notes (optional)
-                  </label>
-                  <textarea
-                    id="notes"
-                    rows={3}
-                    value={notes}
-                    onChange={(e) => setNotes(e.target.value)}
-                    className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-sea focus:outline-none focus:ring-1 focus:ring-sea"
-                    placeholder="Additional details or instructions..."
-                  />
-                </div>
-              </div>
-
-              <div className="mt-6 flex justify-end gap-3">
-                <button
-                  type="button"
-                  onClick={onClose}
-                  className="rounded-md border border-gray-300 px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  className="rounded-md bg-royal/10 px-3 py-2 text-sm font-semibold text-royal shadow-xs hover:bg-royal/20 dark:bg-royal/20 dark:text-royal dark:shadow-none dark:hover:bg-royal/30"
-                >
-                  Add to Calendar
-                </button>
-              </div>
-            </form>
-          </DialogPanel>
-        </div>
-      </div>
-    </Dialog>
-  );
-}
-
-function CreateNewModal({
-  open,
-  onClose,
-  onSelect,
-}: {
-  open: boolean;
-  onClose: () => void;
-  onSelect?: (kind: CreateNewKind) => void;
-}) {
-  const actions: Array<{
-    key: CreateNewKind;
-    name: string;
-    desc: string;
-    icon: React.ElementType;
-    color: string;
-  }> = [
-    {
-      key: "property",
-      name: "New Property",
-      desc: "Add a property to your portfolio",
-      icon: BuildingOfficeIcon,
-      color: "bg-blue-50 text-blue-600",
-    },
-    {
-      key: "lease",
-      name: "New Lease",
-      desc: "Create and track a lease",
-      icon: DocumentDuplicateIcon,
-      color: "bg-green-50 text-green-600",
-    },
-    {
-      key: "issue",
-      name: "New Issue",
-      desc: "Log a maintenance or task",
-      icon: ClipboardIcon,
-      color: "bg-amber-50 text-amber-600",
-    },
-    {
-      key: "report",
-      name: "New Report",
-      desc: "Generate insights & KPIs",
-      icon: ChartPieIcon,
-      color: "bg-gray-50 text-gray-600",
-    },
-    {
-      key: "email",
-      name: "Compose Email",
-      desc: "Send a message",
-      icon: EnvelopeIcon,
-      color: "bg-cyan-50 text-cyan-600",
-    },
-  ];
-
-  return (
-    <Dialog open={open} onClose={onClose} className="relative z-50">
-      <DialogBackdrop
-        transition
-        className="fixed inset-0 bg-gray-900/50 transition-opacity duration-200 ease-out data-[closed]:opacity-0"
-      />
-
-      <div className="fixed inset-0 overflow-y-auto p-4 sm:p-6 md:p-8">
-        <div className="mx-auto max-w-lg">
-          <DialogPanel
-            transition
-            className="relative transform overflow-hidden rounded-2xl border border-gray-200 bg-white p-6 shadow-xl transition-all data-[closed]:scale-95 data-[closed]:opacity-0"
-          >
-            <div className="flex items-start justify-between">
-              <div>
-                <h2 className="text-lg font-semibold text-gray-900">
-                  Create new…
-                </h2>
-                <p className="mt-1 text-sm text-gray-500">
-                  Choose what you'd like to create.
-                </p>
-              </div>
-              <button
-                onClick={onClose}
-                className="-m-2 rounded-full p-2 text-gray-400 hover:text-gray-600"
-                aria-label="Close"
-              >
-                <XMarkIcon className="h-6 w-6" />
-              </button>
-            </div>
-
-            <div className="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-2">
-              {actions.map((a) => (
-                <button
-                  key={a.key}
-                  onClick={() => onSelect?.(a.key)}
-                  className="group flex items-start gap-3 rounded-xl border border-gray-200 bg-white p-4 text-left shadow-sm hover:shadow-md transition-shadow"
-                >
-                  <span
-                    className={`inline-flex items-center justify-center rounded-lg p-2 ${a.color}`}
-                  >
-                    <a.icon className="h-5 w-5" />
-                  </span>
-                  <span>
-                    <span className="block text-sm font-semibold text-gray-900 group-hover:text-sea">
-                      {a.name}
-                    </span>
-                    <span className="mt-0.5 block text-xs text-gray-500">
-                      {a.desc}
-                    </span>
-                  </span>
-                </button>
-              ))}
-            </div>
-
-            <div className="mt-6 flex justify-end gap-3">
-              <button
-                onClick={onClose}
-                className="rounded-md border border-gray-300 px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
-              >
-                Cancel
-              </button>
-            </div>
-
-            <TransitionChild>
-              <div className="absolute inset-x-0 -bottom-24 mx-auto h-24 w-[80%] rounded-full bg-gray-100 blur-2xl" />
-            </TransitionChild>
-          </DialogPanel>
-        </div>
-      </div>
-    </Dialog>
-  );
-}
-
-// --- Sample data (files) ---
-const recentFiles = [
-  {
-    id: 1,
-    name: "Q4 Financial Report",
-    type: "PDF",
-    lastModified: "2 hours ago",
-    size: "2.4 MB",
-    starred: true,
-    icon: DocumentTextIcon,
-  },
-  {
-    id: 2,
-    name: "Property Analysis Spreadsheet",
-    type: "Excel",
-    lastModified: "1 day ago",
-    size: "1.8 MB",
-    starred: false,
-    icon: DocumentTextIcon,
-  },
-  {
-    id: 3,
-    name: "Client Meeting Notes",
-    type: "Document",
-    lastModified: "3 days ago",
-    size: "245 KB",
-    starred: true,
-    icon: DocumentTextIcon,
-  },
-  {
-    id: 4,
-    name: "Marketing Materials",
-    type: "Folder",
-    lastModified: "1 week ago",
-    size: "—",
-    starred: false,
-    icon: FolderIcon,
-  },
-];
-
-// --- Top 5 issues (sample) ---
-interface Issue {
-  id: string;
-  title: string;
-  priority: "Urgent" | "High" | "Medium" | "Low";
-  status: "Open" | "In Progress" | "Resolved" | "Closed";
-  property: string;
-  unit?: string;
-  reportedDate: string;
-}
-
+// Sample data
 const topIssues: Issue[] = [
   {
     id: "1",
@@ -399,8 +76,7 @@ const topIssues: Issue[] = [
   },
 ];
 
-// --- Calendar sample data from user snippet (trimmed to essentials) ---
-const meetings = [
+const meetings: Meeting[] = [
   {
     id: 1,
     date: "01/10/2022",
@@ -453,7 +129,46 @@ const meetings = [
   },
 ];
 
-const days = [
+const recentFiles: RecentFile[] = [
+  {
+    id: 1,
+    name: "Q4 Financial Report",
+    type: "PDF",
+    lastModified: "2 hours ago",
+    size: "2.4 MB",
+    starred: true,
+    icon: DocumentTextIcon,
+  },
+  {
+    id: 2,
+    name: "Property Analysis Spreadsheet",
+    type: "Excel",
+    lastModified: "1 day ago",
+    size: "1.8 MB",
+    starred: false,
+    icon: DocumentTextIcon,
+  },
+  {
+    id: 3,
+    name: "Client Meeting Notes",
+    type: "Document",
+    lastModified: "3 days ago",
+    size: "245 KB",
+    starred: true,
+    icon: DocumentTextIcon,
+  },
+  {
+    id: 4,
+    name: "Marketing Materials",
+    type: "Folder",
+    lastModified: "1 week ago",
+    size: "—",
+    starred: false,
+    icon: FolderIcon,
+  },
+];
+
+const days: CalendarDay[] = [
   { date: "2021-12-27" },
   { date: "2021-12-28" },
   { date: "2021-12-29" },
@@ -531,10 +246,12 @@ export default function WorkspacePage() {
   }, []);
 
   const handleCreateSelect = (kind: CreateNewKind) => {
-    // wire to your routes or open other modals as needed
-    // e.g., router.push(`/properties/new`)
     console.log("create:", kind);
     setCreateOpen(false);
+
+    // Handle navigation to different creation flows
+    // e.g., router.push(`/${kind}/new`)
+    console.log(`Navigate to create ${kind}`);
   };
 
   const handleAddToCalendar = (issue: Issue) => {
@@ -792,14 +509,13 @@ export default function WorkspacePage() {
         </div>
       </div>
 
-      {/* Add Issue to Calendar Modal */}
+      {/* Modals */}
       <AddIssueToCalendarModal
         open={addToCalendarOpen}
         onClose={() => setAddToCalendarOpen(false)}
         issue={selectedIssue}
       />
 
-      {/* Create New Modal */}
       <CreateNewModal
         open={createOpen}
         onClose={() => setCreateOpen(false)}
