@@ -14,7 +14,6 @@ import {
   MapPinIcon,
 } from "@heroicons/react/20/solid";
 import {
-  BuildingOfficeIcon,
   ChartPieIcon,
   ClipboardIcon,
   ClockIcon,
@@ -23,7 +22,6 @@ import {
   EllipsisHorizontalIcon as EllipsisOutline,
   EnvelopeIcon,
   FolderIcon,
-  PlusIcon,
   StarIcon,
   XMarkIcon,
 } from "@heroicons/react/24/outline";
@@ -557,7 +555,6 @@ export default function WorkspacePage() {
           onClick={() => setCreateOpen(true)}
           className="rounded-md bg-royal/10 px-3 py-2 text-sm font-semibold text-royal shadow-xs hover:bg-royal/20 dark:bg-royal/20 dark:text-royal dark:shadow-none dark:hover:bg-royal/30"
         >
-          <PlusIcon className="-ml-0.5 mr-1.5 h-4 w-4" />
           Create New
         </button>
       </div>
