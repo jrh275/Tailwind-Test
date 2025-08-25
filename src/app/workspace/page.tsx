@@ -14,6 +14,7 @@ import {
   MapPinIcon,
 } from "@heroicons/react/20/solid";
 import {
+  BuildingOfficeIcon,
   ChartPieIcon,
   ClipboardIcon,
   ClockIcon,
