@@ -23,6 +23,7 @@ import {
   EllipsisHorizontalIcon as EllipsisOutline,
   EnvelopeIcon,
   FolderIcon,
+  PlusIcon,
   StarIcon,
   XMarkIcon,
 } from "@heroicons/react/24/outline";
@@ -522,7 +523,7 @@ export default function WorkspacePage() {
     "inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-medium bg-gray-100 text-gray-800";
 
   const propertyChip =
-    "inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-medium bg-gray-100 text-gray-800";
+    "inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-medium bg-blue-50 text-blue-700";
 
   // group urgent/high first for display flair
   const topIssuesSorted = useMemo(() => {
@@ -556,6 +557,7 @@ export default function WorkspacePage() {
           onClick={() => setCreateOpen(true)}
           className="rounded-md bg-royal/10 px-3 py-2 text-sm font-semibold text-royal shadow-xs hover:bg-royal/20 dark:bg-royal/20 dark:text-royal dark:shadow-none dark:hover:bg-royal/30"
         >
+          <PlusIcon className="-ml-0.5 mr-1.5 h-4 w-4" />
           Create New
         </button>
       </div>
@@ -695,7 +697,7 @@ export default function WorkspacePage() {
                 <img
                   alt=""
                   src={meeting.imageUrl}
-                  className="h-10 w-10 flex-none rounded-full"
+                  className="h-8 w-8 flex-none rounded-full"
                 />
                 <div className="flex-auto">
                   <h3 className="pr-10 font-semibold text-gray-900 xl:pr-0">
