@@ -1,0 +1,102 @@
+@import "tailwindcss";
+
+/* ----------------------------------------------------
+   THEME TOKENS (Tailwind v4 style, like theme.css)
+   ---------------------------------------------------- */
+@theme {
+  /* Fonts */
+  --font-sans: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI",
+    Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji",
+    "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --font-heading: "EB Garamond Variable", ui-serif, Georgia, Cambria,
+    "Times New Roman", Times, serif;
+
+  /* Core colors */
+  --color-royal: #035ede;
+  --color-spruce: #1bb169;
+  --color-cardinal: #d2314e;
+  --color-pumpkin: #f7a911;
+
+  --color-midnight: #1c2026;
+  --color-sea: #172537;
+  --color-foggy: #717985;
+  --color-rainy: #aab0b8;
+  --color-cloudy: #dfe0e5;
+  --color-mist: #ebeef0;
+  --color-faint: #f7f9fc;
+  --color-white: #ffffff;
+
+  /* Semantic defaults */
+  --color-background: #ffffff;
+  --color-foreground: #1c2026;
+
+  --color-primary: #035ede;
+  --color-primary-foreground: #ffffff;
+
+  --color-accent: #f7a911;
+  --color-accent-foreground: #1c2026;
+
+  --color-destructive: #d2314e;
+  --color-destructive-foreground: #ffffff;
+
+  --color-muted: #ebeef0;
+  --color-muted-foreground: #717985;
+
+  --color-border: #dfe0e5;
+  --color-ring: #035ede;
+}
+
+/* ----------------------------------------------------
+   BASE STYLES & OVERRIDES
+   ---------------------------------------------------- */
+html,
+body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: var(--color-background);
+  color: var(--color-foreground);
+  min-height: 100dvh;
+}
+
+/* Borders & strokes */
+.border,
+.border-b,
+.border-t,
+.border-l,
+.border-r {
+  border-color: var(--color-border) !important;
+}
+
+/* Sidebar + Searchbar stroke fix */
+aside,
+header {
+  border-color: var(--color-border) !important;
+}
+
+/* ----------------------------------------------------
+   PROPERTY PAGE TABS
+   ---------------------------------------------------- */
+.property-tabs [role="tablist"] {
+  border-bottom: none !important;
+}
+
+.property-tabs [role="tab"] {
+  border-bottom: 2px solid transparent;
+  color: var(--color-foggy);
+}
+
+.property-tabs [role="tab"][aria-selected="true"] {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+  font-weight: 600;
+}
+
+.property-tabs [role="tab"]:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}

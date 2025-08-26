@@ -1,22 +1,24 @@
 @import "tailwindcss";
 
 /* ----------------------------------------------------
-   THEME TOKENS (Tailwind v4 style, like theme.css)
+   THEME TOKENS (Tailwind v4 style, matching Feynman)
    ---------------------------------------------------- */
 @theme {
   /* Fonts */
   --font-sans: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI",
     Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji",
     "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-  --font-heading: "EB Garamond Variable", ui-serif, Georgia, Cambria,
-    "Times New Roman", Times, serif;
+  --font-heading: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI",
+  Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji",
+  "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
 
-  /* Core colors */
+  /* Core brand colors (matching Feynman) */
   --color-royal: #035ede;
   --color-spruce: #1bb169;
   --color-cardinal: #d2314e;
   --color-pumpkin: #f7a911;
 
+  /* Neutral scale (matching Feynman) */
   --color-midnight: #1c2026;
   --color-sea: #172537;
   --color-foggy: #717985;
@@ -26,7 +28,7 @@
   --color-faint: #f7f9fc;
   --color-white: #ffffff;
 
-  /* Semantic defaults */
+  /* Semantic tokens (matching Feynman) */
   --color-background: #ffffff;
   --color-foreground: #1c2026;
 
@@ -44,59 +46,155 @@
 
   --color-border: #dfe0e5;
   --color-ring: #035ede;
+
+  /* Typography tokens (matching old system for compatibility) */
+  --color-typography-midnight: #1c2026;
+  --color-typography-foggy: #717985;
+  --color-typography-rainy: #aab0b8;
+  --color-typography-white: #ffffff;
+
+  /* Base tokens (for compatibility) */
+  --color-base-midnight: #1c2026;
+  --color-base-sea: #172537;
+  --color-base-foggy: #717985;
+  --color-base-rainy: #aab0b8;
+  --color-base-cloudy: #dfe0e5;
+  --color-base-mist: #ebeef0;
+  --color-base-faint: #f7f9fc;
+  --color-base-white: #ffffff;
+
+  /* Brand tokens (for compatibility) */
+  --color-brand-royal: #035ede;
+  --color-brand-royal-hover: #0250c9;
+
+  /* Contextual tokens */
+  --color-contextual-spruce: #1bb169;
+  --color-contextual-cardinal: #d2314e;
+  --color-contextual-cardinal-hover: #b82841;
+  --color-contextual-pumpkin: #f7a911;
 }
 
 /* ----------------------------------------------------
-   BASE STYLES & OVERRIDES
+   BASE STYLES (matching Feynman)
    ---------------------------------------------------- */
-html,
-body {
-  height: 100%;
-  margin: 0;
-  padding: 0;
+@layer base {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply font-heading font-bold text-foreground;
+  }
+
+  h1 {
+    font-size: 40px;
+    line-height: 44px;
+  }
+  h2 {
+    font-size: 32px;
+    line-height: 36px;
+  }
+  h3 {
+    font-size: 26px;
+    line-height: 30px;
+  }
+  h4 {
+    font-size: 22px;
+    line-height: 26px;
+  }
+  h5 {
+    font-size: 18px;
+    line-height: 22px;
+  }
+  h6 {
+    font-size: 16px;
+    line-height: 20px;
+  }
+
+  p {
+    @apply font-sans font-normal text-foreground;
+    font-size: 16px;
+    line-height: 20px;
+  }
+}
+
+/* ----------------------------------------------------
+   RUNTIME THEME SCOPE (matching Feynman)
+   ---------------------------------------------------- */
+:root {
+  color-scheme: light dark;
+}
+
+[data-theme='light'] {
+  --color-background: #ffffff;
+  --color-foreground: #1c2026;
+  --color-muted: #ebeef0;
+  --color-muted-foreground: #717985;
+  --color-border: #dfe0e5;
+  --color-ring: #035ede;
+}
+
+[data-theme='dark'] {
+  --color-background: #172537;
+  --color-foreground: #ffffff;
+  --color-muted: #1c2026;
+  --color-muted-foreground: #aab0b8;
+  --color-border: #2a3442;
+  --color-ring: #3b82f6;
 }
 
 body {
-  font-family: var(--font-sans);
   background-color: var(--color-background);
   color: var(--color-foreground);
+  font-family: var(--font-sans);
   min-height: 100dvh;
 }
 
-/* Borders & strokes */
-.border,
-.border-b,
-.border-t,
-.border-l,
-.border-r {
-  border-color: var(--color-border) !important;
+/* Dark variant helper (matching Feynman) */
+@custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
+
+/* Custom font sizes (matching existing usage) */
+.text-12-16 {
+  font-size: 12px;
+  line-height: 16px;
 }
 
-/* Sidebar + Searchbar stroke fix */
-aside,
-header {
-  border-color: var(--color-border) !important;
+.text-14-20 {
+  font-size: 14px;
+  line-height: 20px;
 }
 
 /* ----------------------------------------------------
-   PROPERTY PAGE TABS
+   UTILITY CLASSES (matching Feynman approach)
    ---------------------------------------------------- */
-.property-tabs [role="tablist"] {
-  border-bottom: none !important;
+@utility btn {
+  @apply inline-flex items-center justify-center rounded-xl px-4 py-2
+    text-sm font-medium transition-colors border border-border;
+  background: var(--color-muted);
+  color: var(--color-foreground);
 }
 
-.property-tabs [role="tab"] {
-  border-bottom: 2px solid transparent;
-  color: var(--color-foggy);
+@utility btn-primary {
+  @apply inline-flex items-center justify-center rounded-xl px-4 py-2
+    text-sm font-medium transition-colors;
+  background: var(--color-primary);
+  color: var(--color-primary-foreground);
 }
 
-.property-tabs [role="tab"][aria-selected="true"] {
-  border-color: var(--color-primary);
+@utility link {
   color: var(--color-primary);
-  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 3px;
 }
 
-.property-tabs [role="tab"]:focus-visible {
-  outline: 2px solid var(--color-primary);
-  outline-offset: 2px;
+/* Hover states */
+.btn:hover {
+  filter: brightness(0.98);
+}
+.btn-primary:hover {
+  filter: brightness(1.08);
+}
+.link:hover {
+  text-decoration-thickness: 2px;
 }

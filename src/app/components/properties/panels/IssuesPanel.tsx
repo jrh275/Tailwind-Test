@@ -6,7 +6,6 @@ import {
   EyeIcon,
   MagnifyingGlassIcon,
   PencilIcon,
-  PlusIcon,
   UserIcon,
   WrenchScrewdriverIcon,
 } from "@heroicons/react/20/solid";
@@ -165,7 +164,7 @@ export default function IssuesPanel() {
     [issues, searchQuery, statusFilter, priorityFilter, categoryFilter]
   );
 
-  // --- Grey chips (status + priority) ---
+  // --- Chips (status + priority) ---
   const chipClass =
     "inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-cloudy/50 text-midnight hover:bg-cloudy dark:bg-cloudy/20 dark:text-cloudy dark:hover:bg-cloudy/30";
 
@@ -174,6 +173,11 @@ export default function IssuesPanel() {
     <ExclamationTriangleIcon className="h-4 w-4 text-gray-400 dark:text-gray-500" />
   );
   const getPriorityStyle = (_priority: Issue["priority"]) => chipClass;
+
+  // --- Icon buttons (no boxes) ---
+  const iconButtonClass =
+    "appearance-none border-none bg-transparent p-0 m-0 text-sea hover:text-sea/80 transition-colors cursor-pointer " +
+    "outline-none focus:outline-none focus-visible:ring-2 focus-visible:ring-sea/25 focus-visible:ring-offset-2 rounded";
 
   function handleCreate(newIssue: Omit<Issue, "id">) {
     setIssues((prev) => {
@@ -255,7 +259,6 @@ export default function IssuesPanel() {
             onClick={() => setCreateOpen(true)}
             className="flex items-center gap-2 rounded-md bg-royal/10 px-3 py-2 text-sm font-semibold text-royal shadow-xs hover:bg-royal/20 dark:bg-royal/20 dark:text-royal dark:shadow-none dark:hover:bg-royal/30"
           >
-            <PlusIcon className="h-4 w-4" />
             New Issue
           </button>
         </div>
@@ -345,17 +348,19 @@ export default function IssuesPanel() {
                 )}
               </div>
 
-              {/* Actions (Heroicons components) */}
+              {/* Actions (unstyled icon buttons) */}
               <div className="mt-4 flex items-center justify-end gap-4">
                 <button
-                  className="text-sea hover:text-sea"
+                  type="button"
+                  className={iconButtonClass}
                   aria-label="View Details"
                 >
                   <EyeIcon className="size-5" aria-hidden="true" />
                 </button>
 
                 <button
-                  className="text-red hover:text-sea"
+                  type="button"
+                  className={iconButtonClass}
                   aria-label="Edit Issue"
                 >
                   <PencilIcon className="size-5" aria-hidden="true" />
@@ -439,17 +444,19 @@ export default function IssuesPanel() {
                       </p>
                     </div>
 
-                    {/* Actions (Heroicons components) */}
+                    {/* Actions (unstyled icon buttons) */}
                     <div className="mt-3 flex justify-end gap-4 sm:mt-0">
                       <button
-                        className="text-red hover:text-sea"
+                        type="button"
+                        className={iconButtonClass}
                         aria-label="View Details"
                       >
                         <EyeIcon className="size-5" aria-hidden="true" />
                       </button>
 
                       <button
-                        className="text-sea hover:text-sea"
+                        type="button"
+                        className={iconButtonClass}
                         aria-label="Edit Issue"
                       >
                         <PencilIcon className="size-5" aria-hidden="true" />
