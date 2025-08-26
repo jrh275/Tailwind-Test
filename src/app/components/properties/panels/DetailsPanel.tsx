@@ -3,6 +3,7 @@ import {
   ArrowDownTrayIcon,
   PaperClipIcon,
   PlusIcon,
+  TrashIcon,
 } from "@heroicons/react/20/solid";
 import { FieldInput, FieldSelect } from "../shared";
 
@@ -154,9 +155,14 @@ export default function DetailsPanel() {
                 </p>
               </div>
             </div>
-            <button className="flex w-7 justify-center rounded-full p-1 text-sm text-gray-900 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
-              <ArrowDownTrayIcon className="h-4 w-4" />
-            </button>
+            <div className="flex items-center gap-2">
+              <button className="flex w-7 justify-center rounded-full p-1 text-sm text-gray-900 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
+                <ArrowDownTrayIcon className="h-4 w-4" />
+              </button>
+              <button className="flex w-7 justify-center rounded-full p-1 text-sm text-sm text-sea hover:text-sea dark:text-sea  dark:hover:text-red-300">
+                <TrashIcon className="h-4 w-4" />
+              </button>
+            </div>
           </li>
 
           <li className="flex items-center justify-between py-3">
@@ -171,9 +177,14 @@ export default function DetailsPanel() {
                 </p>
               </div>
             </div>
-            <button className="flex w-7 justify-center rounded-full p-1 text-sm text-gray-900 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
-              <ArrowDownTrayIcon className="h-4 w-4" />
-            </button>
+            <div className="flex items-center gap-2">
+              <button className="flex w-7 justify-center rounded-full p-1 text-sm text-gray-900 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
+                <ArrowDownTrayIcon className="h-4 w-4" />
+              </button>
+              <button className="flex w-7 justify-center rounded-full p-1 text-sm ttext-sm text-sea hover:text-sea dark:text-sea  dark:hover:text-red-300">
+                <TrashIcon className="h-4 w-4" />
+              </button>
+            </div>
           </li>
 
           <li className="flex items-center justify-between py-3">
@@ -188,9 +199,14 @@ export default function DetailsPanel() {
                 </p>
               </div>
             </div>
-            <button className="flex w-7 justify-center rounded-full p-1 text-sm text-gray-900 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
-              <ArrowDownTrayIcon className="h-4 w-4" />
-            </button>
+            <div className="flex items-center gap-2">
+              <button className="flex w-7 justify-center rounded-full p-1 text-sm text-gray-900 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
+                <ArrowDownTrayIcon className="h-4 w-4" />
+              </button>
+              <button className="flex w-7 justify-center rounded-full p-1 text-sm text-sea hover:text-sea dark:text-sea dark:hover:text-red-300">
+                <TrashIcon className="h-4 w-4" />
+              </button>
+            </div>
           </li>
         </ul>
       </div>

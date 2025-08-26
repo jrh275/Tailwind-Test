@@ -12,23 +12,21 @@ import {
   TransitionChild,
 } from "@headlessui/react";
 import {
-  ChevronDownIcon,
-  MagnifyingGlassIcon,
-} from "@heroicons/react/20/solid";
-import {
   Bars3Icon,
   BellIcon,
   BriefcaseIcon,
   BuildingOfficeIcon,
   ChartBarIcon,
   ChartPieIcon,
+  ChevronDownIcon,
   ClipboardIcon,
   Cog6ToothIcon,
   DocumentDuplicateIcon,
   InboxIcon,
+  MagnifyingGlassIcon,
   UsersIcon,
   XMarkIcon,
-} from "@heroicons/react/24/outline";
+} from "@heroicons/react/20/solid";
 import React, { useState } from "react";
 
 const navigation = [
