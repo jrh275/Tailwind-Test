@@ -1,10 +1,23 @@
+// src/app/properties/page.tsx
 "use client";
 
 import DataGrid from "@/app/components/DataGrid";
+import { useRouter } from "next/navigation";
 
 export default function PropertiesPage() {
-  const handleExport = () => console.log("Export properties");
-  const handleAdd = () => console.log("Add new property");
+  const router = useRouter();
+
+  const handleExport = () => {
+    console.log("Export properties");
+    // TODO: Add export functionality
+    // You could generate CSV, PDF, or call an API
+  };
+
+  const handleAdd = () => {
+    console.log("Add new property");
+    // Navigate to the new property form
+    router.push("/properties/new");
+  };
 
   return (
     <div className="px-6 pt-0 pb-6 space-y-8">
