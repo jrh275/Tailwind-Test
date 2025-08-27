@@ -1,6 +1,7 @@
 // src/app/components/properties/panels/SettingsPanel.tsx
 "use client";
 
+import { Button } from "@/components/ui/button"; // ✅ added
 import {
   BellIcon,
   BuildingOfficeIcon,
@@ -499,15 +500,9 @@ export default function SettingsPanel() {
 
       {/* Action Buttons */}
       <div className="flex justify-end gap-3">
-        <button className="rounded-md bg-white px-4 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 dark:bg-white/10 dark:text-white dark:ring-white/20 dark:hover:bg-white/20">
-          Reset to Defaults
-        </button>
-        <button className="rounded-md bg-gray-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-gray-500">
-          Cancel
-        </button>
-        <button className="rounded-md bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600">
-          Save Settings
-        </button>
+        <Button variant="outline">Reset to Defaults</Button>
+        <Button variant="outline">Cancel</Button>
+        <Button variant="cta">Save Settings</Button>
       </div>
     </div>
   );

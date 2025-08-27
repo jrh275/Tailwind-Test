@@ -1,6 +1,7 @@
 // src/app/components/properties/panels/LeasesPanel.tsx
 "use client";
 
+import { Button } from "@/components/ui/button";
 import {
   ArrowDownTrayIcon,
   PaperClipIcon,
@@ -82,7 +83,7 @@ export default function LeasesPanel() {
 
   return (
     <div className="space-y-6">
-      {/* --- Lease Dates & Terms (match DetailsPanel line rhythm) --- */}
+      {/* --- Lease Dates & Terms --- */}
       <div className="grid grid-cols-1 gap-x-8 sm:grid-cols-2">
         {/* Line 1 */}
         <div className="px-0 py-3">
@@ -152,12 +153,12 @@ export default function LeasesPanel() {
         </div>
       </div>
 
-      {/* Divider to match DetailsPanel */}
+      {/* Divider */}
       <div className="border-t border-gray-200 dark:border-white/10" />
 
-      {/* --- Tenant (same dt/dd pattern) --- */}
+      {/* --- Tenant --- */}
       <div>
-        <h3 className="text-sm font-medium text-gray-900 dark:text-white mb-2">
+        <h3 className="mb-2 text-sm font-medium text-gray-900 dark:text-white">
           Tenant
         </h3>
         <div className="grid grid-cols-1 gap-x-8 sm:grid-cols-2">
@@ -210,21 +211,25 @@ export default function LeasesPanel() {
       {/* Divider */}
       <div className="border-t border-gray-200 dark:border-white/10" />
 
-      {/* --- Lease Files (mirrors Attachments block) --- */}
+      {/* --- Lease Files (matches Properties panel attachments) --- */}
       <div>
         <div className="flex items-center justify-between">
           <h3 className="text-sm font-medium text-gray-900 dark:text-white">
             Lease Files
           </h3>
+          {/* Plus button matches Properties panel */}
           <button
             type="button"
             className="rounded-full border-1 border-sea p-1 text-sea hover:bg-sea/20 dark:border-sea dark:text-sea dark:hover:bg-sea/30"
+            aria-label="Add file"
+            title="Add file"
           >
             <PlusIcon aria-hidden="true" className="size-5" />
           </button>
         </div>
 
         <ul className="mt-4 divide-y divide-gray-200 dark:divide-white/10">
+          {/* Row 1 */}
           <li className="flex items-center justify-between py-3">
             <div className="flex items-center gap-3">
               <PaperClipIcon className="h-5 w-5 text-gray-400" />
@@ -237,12 +242,27 @@ export default function LeasesPanel() {
                 </p>
               </div>
             </div>
-            <button className="flex items-center gap-1 text-sm text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
-              <ArrowDownTrayIcon className="h-4 w-4" />
-              Download
-            </button>
+
+            {/* Icon-only actions (match exactly) */}
+            <div className="flex items-center gap-2">
+              <button
+                className="flex w-7 justify-center rounded-full p-1 text-sm text-gray-900 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+                aria-label="Download"
+                title="Download"
+              >
+                <ArrowDownTrayIcon className="h-4 w-4" />
+              </button>
+              <button
+                className="flex w-7 justify-center rounded-full p-1 text-sm text-sea hover:text-sea dark:text-sea dark:hover:text-red-300"
+                aria-label="Delete"
+                title="Delete"
+              >
+                <TrashIcon className="h-4 w-4" />
+              </button>
+            </div>
           </li>
 
+          {/* Row 2 */}
           <li className="flex items-center justify-between py-3">
             <div className="flex items-center gap-3">
               <PaperClipIcon className="h-5 w-5 text-gray-400" />
@@ -255,10 +275,24 @@ export default function LeasesPanel() {
                 </p>
               </div>
             </div>
-            <button className="flex items-center gap-1 text-sm text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
-              <ArrowDownTrayIcon className="h-4 w-4" />
-              Download
-            </button>
+
+            {/* Icon-only actions (match exactly) */}
+            <div className="flex items-center gap-2">
+              <button
+                className="flex w-7 justify-center rounded-full p-1 text-sm text-gray-900 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+                aria-label="Download"
+                title="Download"
+              >
+                <ArrowDownTrayIcon className="h-4 w-4" />
+              </button>
+              <button
+                className="flex w-7 justify-center rounded-full p-1 text-sm text-sea hover:text-sea dark:text-sea dark:hover:text-red-300"
+                aria-label="Delete"
+                title="Delete"
+              >
+                <TrashIcon className="h-4 w-4" />
+              </button>
+            </div>
           </li>
         </ul>
       </div>
@@ -268,7 +302,7 @@ export default function LeasesPanel() {
 
       {/* --- Lease Rent --- */}
       <div>
-        <h3 className="text-sm font-medium text-gray-900 dark:text-white mb-2">
+        <h3 className="mb-2 text-sm font-medium text-gray-900 dark:text-white">
           Lease Rent
         </h3>
         <div className="grid grid-cols-1 gap-x-8 sm:grid-cols-2">
@@ -302,19 +336,15 @@ export default function LeasesPanel() {
       {/* Divider */}
       <div className="border-t border-gray-200 dark:border-white/10" />
 
-      {/* --- Rent Schedule (compact card style aligned with DetailsPanel density) --- */}
+      {/* --- Rent Schedule --- */}
       <div>
         <div className="flex items-center justify-between">
           <h3 className="text-sm font-medium text-gray-900 dark:text-white">
             Rent Schedule
           </h3>
-          <button
-            onClick={addRentPeriod}
-            className="flex items-center gap-2 rounded-md bg-brand-royal px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-royal"
-          >
-            <PlusIcon className="h-4 w-4" />
+          <Button variant="cta" onClick={addRentPeriod}>
             Add Period
-          </button>
+          </Button>
         </div>
 
         <div className="mt-4 space-y-4">
@@ -330,7 +360,7 @@ export default function LeasesPanel() {
                 {rentPeriods.length > 1 && (
                   <button
                     onClick={() => removeRentPeriod(period.id)}
-                    className="text-red-600 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300"
+                    className="text-sea hover:text-sea dark:text-sea dark:hover:text-sea"
                     aria-label={`Remove Period ${idx + 1}`}
                   >
                     <TrashIcon className="h-4 w-4" />
@@ -399,20 +429,10 @@ export default function LeasesPanel() {
         </div>
       </div>
 
-      {/* Actions (mirror DetailsPanel buttons: outline Cancel + royal Save) */}
+      {/* Actions */}
       <div className="mt-8 flex justify-end gap-3">
-        <button
-          type="button"
-          className="rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 dark:bg-white/10 dark:text-white dark:ring-white/20 dark:hover:bg-white/20"
-        >
-          Cancel
-        </button>
-        <button
-          type="button"
-          className="rounded-md bg-royal/10 px-3 py-2 text-sm font-semibold text-royal shadow-xs hover:bg-royal/20 dark:bg-royal/20 dark:text-royal dark:shadow-none dark:hover:bg-royal/30"
-        >
-          Save Changes
-        </button>
+        <Button variant="outline">Cancel</Button>
+        <Button variant="cta">Save Changes</Button>
       </div>
     </div>
   );

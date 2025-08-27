@@ -415,9 +415,9 @@ export default function WorkspacePage() {
                   className="h-8 w-8 flex-none rounded-full"
                 />
                 <div className="flex-auto">
-                  <h3 className="pr-10 font-semibold text-gray-900 xl:pr-0">
+                  <h5 className="pr-10 font-semibold text-gray-900 xl:pr-0">
                     {meeting.name}
-                  </h3>
+                  </h5>
                   <dl className="mt-1 flex flex-col text-gray-500 xl:flex-row xl:items-center">
                     <div className="flex items-center gap-x-2">
                       <CalendarIcon
