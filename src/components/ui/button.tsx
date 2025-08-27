@@ -7,15 +7,17 @@ const styles = {
   base: [
     // Base
     "relative isolate inline-flex items-baseline justify-center gap-x-2 rounded-lg border text-base/6 font-medium",
-    // Sizing
+    // Sizing (kept so sizes work consistently across variants)
     "px-[calc(theme(spacing.3.5)-1px)] py-[calc(theme(spacing.2.5)-1px)] sm:px-[calc(theme(spacing.3)-1px)] sm:py-[calc(theme(spacing.1.5)-1px)] sm:text-sm/6",
     // Focus
     "focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-royal",
     // Disabled
     "disabled:opacity-50 disabled:cursor-not-allowed",
-    // Icon
+    // Icon sizing
     "[&>svg]:size-5 [&>svg]:shrink-0 sm:[&>svg]:size-4",
   ],
+
+  // Variants
   solid: ["border-transparent", "shadow-sm"],
   outline: [
     "border-gray-300 text-gray-700 bg-white hover:bg-gray-50",
@@ -25,6 +27,19 @@ const styles = {
     "border-transparent text-gray-700 hover:bg-gray-100",
     "dark:text-gray-300 dark:hover:bg-white/10",
   ],
+
+  /** New: CTA (your requested style) */
+  cta: [
+    "border-transparent", // no visible border
+    "items-center rounded-md", // override base alignment/radius
+    "font-semibold", // override base font weight
+    // light royal tint + subtle shadow
+    "bg-royal/10 text-royal shadow-xs hover:bg-royal/20",
+    // dark mode
+    "dark:bg-royal/20 dark:text-royal dark:shadow-none dark:hover:bg-royal/30",
+  ],
+
+  // Color palettes used with the "solid" variant (unchanged)
   colors: {
     primary: [
       "text-white bg-royal hover:bg-royal/90",
@@ -51,12 +66,11 @@ const styles = {
 
 type ColorVariant = keyof typeof styles.colors;
 
-// Button props - either native button or link
 type BaseButtonProps = {
   className?: string;
   children: React.ReactNode;
   color?: ColorVariant | (string & {});
-  variant?: "solid" | "outline" | "plain";
+  variant?: "solid" | "outline" | "plain" | "cta"; // ← added "cta"
   size?: "sm" | "md" | "lg";
   loading?: boolean;
   disabled?: boolean;
@@ -72,10 +86,9 @@ type LinkButtonProps = BaseButtonProps &
 
 type ButtonProps = NativeButtonProps | LinkButtonProps;
 
-// Size variations
 const sizeStyles = {
   sm: "px-2.5 py-1.5 text-xs",
-  md: "px-3 py-2 text-sm",
+  md: "px-3 py-1.5 text-sm font-medium", // ← matches your CTA string exactly
   lg: "px-4 py-2 text-base",
 };
 
@@ -96,29 +109,30 @@ export const Button = forwardRef<
     },
     ref
   ) => {
-    // Check if it's a link (has href prop)
     const isLink = "href" in props;
 
-    // Get color styles
     const colorKey = color as ColorVariant;
     const colorStyles = styles.colors[colorKey] || [
       `text-white bg-${color} hover:bg-${color}/90`,
     ];
 
-    // Combine all styles
-    const classes = clsx(
-      styles.base,
+    const variantClasses =
       variant === "outline"
         ? styles.outline
         : variant === "plain"
           ? styles.plain
-          : [styles.solid, colorStyles],
+          : variant === "cta"
+            ? styles.cta
+            : [styles.solid, colorStyles]; // solid
+
+    const classes = clsx(
+      styles.base,
+      variantClasses,
       sizeStyles[size],
       loading && "cursor-wait",
       className
     );
 
-    // Loading spinner component
     const LoadingSpinner = () => (
       <svg
         className="animate-spin -ml-1 mr-2 h-4 w-4"
@@ -175,7 +189,6 @@ export const Button = forwardRef<
 
 Button.displayName = "Button";
 
-// Touch target for better mobile accessibility
 function TouchTarget({ children }: { children: React.ReactNode }) {
   return (
     <>

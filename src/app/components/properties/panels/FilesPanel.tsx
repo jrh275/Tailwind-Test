@@ -1,6 +1,7 @@
 // src/app/components/properties/panels/FilesPanel.tsx
 "use client";
 
+import { Button } from "@/components/ui/button"; // ← add Button
 import {
   ArrowDownTrayIcon,
   EyeIcon,
@@ -9,7 +10,7 @@ import {
   PlusIcon,
   TrashIcon,
 } from "@heroicons/react/20/solid";
-import { DocumentTextIcon, PhotoIcon } from "@heroicons/react/24/outline"; // ← file-type icons (outline look)
+import { DocumentTextIcon, PhotoIcon } from "@heroicons/react/24/outline";
 import { useState } from "react";
 import { FieldSelect } from "../shared";
 
@@ -250,10 +251,7 @@ export default function FilesPanel() {
         />
 
         <div className="ml-auto flex items-center gap-2">
-          <button className="flex items-center gap-2 rounded-md bg-royal/10 px-3 py-2 text-sm font-semibold text-royal shadow-xs hover:bg-royal/20 dark:bg-royal/20 dark:text-royal dark:shadow-none dark:hover:bg-royal/30">
-            <PlusIcon className="h-4 w-4" />
-            Upload File
-          </button>
+          <Button variant="cta">Upload File</Button>
         </div>
       </div>
 
@@ -409,10 +407,10 @@ export default function FilesPanel() {
               : "Upload your first file to get started."}
           </p>
           <div className="mt-6">
-            <button className="inline-flex items-center gap-2 rounded-md bg-royal/10 px-3 py-2 text-sm font-semibold text-royal shadow-xs hover:bg-royal/20 dark:bg-royal/20 dark:text-royal dark:shadow-none dark:hover:bg-royal/30">
+            <Button variant="cta">
               <PlusIcon className="h-4 w-4" />
               Upload File
-            </button>
+            </Button>
           </div>
         </div>
       )}

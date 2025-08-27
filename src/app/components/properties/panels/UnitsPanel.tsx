@@ -1,11 +1,11 @@
 // src/app/components/properties/panels/UnitsPanel.tsx
 "use client";
 
+import { Button } from "@/components/ui/button"; // ← added
 import {
   HomeIcon,
   MagnifyingGlassIcon,
   PencilIcon,
-  PlusIcon,
   UserIcon,
 } from "@heroicons/react/20/solid";
 import { useState } from "react";
@@ -156,9 +156,8 @@ export default function UnitsPanel() {
     <HomeIcon className="h-4 w-4 text-gray-400 dark:text-gray-500" />
   );
 
-  const handlePastLeases = (unit: Unit) => {
+  const handlePastLeases = (unit: Unit) =>
     console.log("Open Past Leases for Unit", unit.number, unit.id);
-  };
 
   return (
     <div className="space-y-6">
@@ -220,10 +219,7 @@ export default function UnitsPanel() {
           </div>
 
           {/* Add Unit */}
-          <button className="flex items-center gap-2 rounded-md bg-royal/10 px-3 py-2 text-sm font-semibold text-royal shadow-xs hover:bg-royal/20 dark:bg-royal/20 dark:text-royal dark:shadow-none dark:hover:bg-royal/30">
-            <PlusIcon className="h-4 w-4" />
-            Add Unit
-          </button>
+          <Button variant="cta">Add Unit</Button>
         </div>
       </div>
 

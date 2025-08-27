@@ -1,6 +1,7 @@
 // src/app/components/properties/panels/IssuesPanel.tsx
 "use client";
 
+import { Button } from "@/components/ui/button"; // ← added
 import {
   ExclamationTriangleIcon,
   EyeIcon,
@@ -254,13 +255,10 @@ export default function IssuesPanel() {
             </button>
           </div>
 
-          {/* New Issue */}
-          <button
-            onClick={() => setCreateOpen(true)}
-            className="flex items-center gap-2 rounded-md bg-royal/10 px-3 py-2 text-sm font-semibold text-royal shadow-xs hover:bg-royal/20 dark:bg-royal/20 dark:text-royal dark:shadow-none dark:hover:bg-royal/30"
-          >
+          {/* New Issue (CTA) */}
+          <Button variant="cta" onClick={() => setCreateOpen(true)}>
             New Issue
-          </button>
+          </Button>
         </div>
       </div>
 
