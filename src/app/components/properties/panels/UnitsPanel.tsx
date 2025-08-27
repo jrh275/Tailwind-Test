@@ -1,7 +1,7 @@
 // src/app/components/properties/panels/UnitsPanel.tsx
 "use client";
 
-import { Button } from "@/components/ui/button"; // ← added
+import { Button } from "@/components/ui/button"; // ← keep your Button
 import {
   HomeIcon,
   MagnifyingGlassIcon,
@@ -10,6 +10,7 @@ import {
 } from "@heroicons/react/20/solid";
 import { useState } from "react";
 import { FieldSelect } from "../shared";
+import AddUnitModal from "./AddUnitModal";
 
 interface Unit {
   id: string;
@@ -114,12 +115,14 @@ const sampleUnits: Unit[] = [
 ];
 
 export default function UnitsPanel() {
-  const [units] = useState<Unit[]>(sampleUnits);
-  // Default to LIST view
+  const [units, setUnits] = useState<Unit[]>(sampleUnits); // ← enable updates
   const [viewMode, setViewMode] = useState<"grid" | "list">("list");
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
   const [typeFilter, setTypeFilter] = useState("all");
+
+  // NEW: Add Unit modal state
+  const [openAdd, setOpenAdd] = useState(false);
 
   const statusOptions = [
     { label: "All Statuses", value: "all" },
@@ -158,6 +161,26 @@ export default function UnitsPanel() {
 
   const handlePastLeases = (unit: Unit) =>
     console.log("Open Past Leases for Unit", unit.number, unit.id);
+
+  // NEW: Create handler maps modal data onto your Unit shape
+  function handleCreateUnit(data: {
+    unitName: string;
+    totalSqFt?: number;
+    address1?: string;
+    address2?: string;
+  }) {
+    const newUnit: Unit = {
+      id: crypto.randomUUID(),
+      number: data.unitName, // map Unit Name -> number
+      floor: 1,
+      type: "Office", // default; adjust if you later add a selector
+      size: data.totalSqFt ?? 0, // map Total SF
+      monthlyRent: 0,
+      status: "Vacant",
+      amenities: [],
+    };
+    setUnits((prev) => [newUnit, ...prev]);
+  }
 
   return (
     <div className="space-y-6">
@@ -219,7 +242,9 @@ export default function UnitsPanel() {
           </div>
 
           {/* Add Unit */}
-          <Button variant="cta">Add Unit</Button>
+          <Button variant="cta" onClick={() => setOpenAdd(true)}>
+            Add Unit
+          </Button>
         </div>
       </div>
 
@@ -300,7 +325,7 @@ export default function UnitsPanel() {
                   className="text-sea hover:text-sea"
                   aria-label={`Edit Unit ${unit.number}`}
                 >
-                  <PencilIcon className="size-6" aria-hidden="true" />
+                  <PencilIcon className="size-5" aria-hidden="true" />
                 </button>
               </div>
             </div>
@@ -328,7 +353,7 @@ export default function UnitsPanel() {
                     </div>
 
                     <div className="ml-2 flex items-center gap-3">
-                      <p className="text-lg font-bold text-gray-900 dark:text-white">
+                      <p className="text-md font-bold text-gray-900 dark:text-white">
                         ${unit.monthlyRent.toLocaleString()}/mo
                       </p>
 
@@ -345,7 +370,7 @@ export default function UnitsPanel() {
                         className="text-sea hover:text-sea"
                         aria-label={`Edit Unit ${unit.number}`}
                       >
-                        <PencilIcon className="size-6" aria-hidden="true" />
+                        <PencilIcon className="size-5" aria-hidden="true" />
                       </button>
                     </div>
                   </div>
@@ -383,6 +408,16 @@ export default function UnitsPanel() {
           </p>
         </div>
       )}
+
+      {/* NEW: Add Unit Modal mount */}
+      <AddUnitModal
+        open={openAdd}
+        onClose={() => setOpenAdd(false)}
+        onCreate={(data) => {
+          handleCreateUnit(data);
+          setOpenAdd(false);
+        }}
+      />
     </div>
   );
 }

@@ -6,6 +6,7 @@ import {
   CheckIcon,
   EllipsisHorizontalIcon,
   FunnelIcon,
+  MagnifyingGlassIcon,
   StarIcon,
   TrashIcon,
 } from "@heroicons/react/24/outline";
@@ -44,7 +45,7 @@ const THREADS: Thread[] = [
     time: "2:30 PM",
     subject: "COI received — next steps",
     snippet:
-      "We got the updated COI; sending it to ownership for sign‑off. Should have approval by end of week.",
+      "We got the updated COI; sending it to ownership for sign-off. Should have approval by end of week.",
     unread: true,
     starred: true,
     priority: "High",
@@ -134,14 +135,23 @@ export default function InboxPage() {
   );
   const [activeFilter, setActiveFilter] = useState("all");
   const [showFilters, setShowFilters] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
 
   const filteredThreads = THREADS.filter((thread) => {
-    // Active filter
+    // Text search across key fields
+    if (searchQuery.trim()) {
+      const q = searchQuery.toLowerCase();
+      const haystack =
+        `${thread.from} ${thread.subject} ${thread.snippet} ${thread.org ?? ""}`.toLowerCase();
+      if (!haystack.includes(q)) return false;
+    }
+
+    // Quick filters
     switch (activeFilter) {
       case "unread":
-        return thread.unread;
+        return !!thread.unread;
       case "starred":
-        return thread.starred;
+        return !!thread.starred;
       case "email":
         return thread.channel === "Email";
       case "sms":
@@ -154,13 +164,9 @@ export default function InboxPage() {
   });
 
   const toggleThreadSelection = (threadId: string) => {
-    const newSelected = new Set(selectedThreads);
-    if (newSelected.has(threadId)) {
-      newSelected.delete(threadId);
-    } else {
-      newSelected.add(threadId);
-    }
-    setSelectedThreads(newSelected);
+    const next = new Set(selectedThreads);
+    next.has(threadId) ? next.delete(threadId) : next.add(threadId);
+    setSelectedThreads(next);
   };
 
   const toggleSelectAll = () => {
@@ -219,7 +225,7 @@ export default function InboxPage() {
       {/* Page header */}
       <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h2>Inbox</h2>
+          <h3>Inbox</h3>
           <p className="small text-foggy mt-1">
             {filteredThreads.length} of {THREADS.length} conversations
             {selectedThreads.size > 0 && (
@@ -232,7 +238,6 @@ export default function InboxPage() {
 
         {/* Filters */}
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-          {/* Filter dropdown */}
           <div className="relative">
             <button
               onClick={() => setShowFilters(!showFilters)}
@@ -263,6 +268,22 @@ export default function InboxPage() {
               </div>
             )}
           </div>
+        </div>
+      </div>
+
+      {/* Search bar */}
+      <div className="mb-4">
+        <div className="relative" role="search">
+          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+            <MagnifyingGlassIcon className="h-4 w-4 text-gray-400" />
+          </div>
+          <input
+            type="text"
+            placeholder="Search issues, assignees, units, reporters…"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-brand-royal focus:border-brand-royal text-sm dark:bg-gray-800 dark:border-gray-600 dark:text-white"
+          />
         </div>
       </div>
 
@@ -319,7 +340,7 @@ export default function InboxPage() {
                   thread.unread ? "bg-base-white" : ""
                 } ${selectedThreads.has(thread.id) ? "bg-brand-royal/5" : ""}`}
               >
-                {/* Top row: checkbox + name/badges + actions */}
+                {/* Top row */}
                 <div className="flex items-center justify-between gap-3">
                   <div className="flex items-center gap-3">
                     {/* Checkbox */}
@@ -332,7 +353,7 @@ export default function InboxPage() {
                       )}
                     </button>
 
-                    {/* Name and badges */}
+                    {/* Name + badges */}
                     <div className="flex items-center gap-2">
                       <span
                         className={`text-sm ${
@@ -416,21 +437,15 @@ export default function InboxPage() {
                   </div>
                 </div>
 
-                {/* Bottom row: avatar + subject + snippet */}
+                {/* Bottom row */}
                 <div className="flex items-start gap-3">
-                  {/* Avatar */}
                   <div className="flex h-8 w-8 items-center justify-center rounded-full bg-base-faint text-xs font-medium text-typography-midnight">
                     {initials(thread.from)}
                   </div>
-
-                  {/* Content */}
                   <div className="min-w-0 space-y-1">
-                    {/* Subject */}
                     <div className="truncate text-[13px] font-medium text-typography-midnight">
                       {thread.subject}
                     </div>
-
-                    {/* Snippet */}
                     <p className="truncate text-xs text-typography-rainy">
                       {thread.snippet}
                     </p>
